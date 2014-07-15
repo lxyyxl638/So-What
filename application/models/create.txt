@@ -1,0 +1,45 @@
+create table q2a_answerss(
+  id int(11) not null auto_increment,
+  qid int(11) not null,
+  answer text not null,
+  username varchar(128) not null,
+  good int not null,
+  bad int not null,
+  date varchar(20),
+  primary key(id),
+  index(qid),
+  foreign key(qid) references q2a_questionss(id) on delete cascade on update cascade
+) default charset utf8;
+
+<?php
+   create table q2a_questionss(
+   id int(11) not null auto_increment,
+   username varchar(128) not null,
+   realname varchar(128) not null,
+   title varchar(128) not null,
+   text text not null,
+   answer_num int,
+   date varchar(20),
+   primary key (id)
+   ) default charset utf8;
+?>
+
+create table user(
+  uid int not null auto_increment primary key,
+  username varchar(128) not null,
+  password varchar(128),
+  signupdate varchar(20),
+  lastlogin varchar(20),
+  lastloginfail varchar(20),
+  numloginfail int
+) default charset utf8;
+
+create table user_profile(
+  id int not null primary key auto_increment,
+  uid int not null,
+  realname varchar(128) not null,
+  email varchar(128) not null,
+  photo varchar(128) not null,
+  index(uid),
+  foreign key(uid) references user(uid) on delete cascade on update cascade
+) default charset utf8
