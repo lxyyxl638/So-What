@@ -18,20 +18,15 @@ signControllers.controller('signinCtrl',['$scope','$http',
 	function($scope,$http){
 
 		$scope.login = function(user){
-			// $scope.user = angular.copy(user);
-			var url = 'http://localhost/sowhatdemo/index.php/api/form/formu/format/json/';
-			//var data = $.param(user);
+			var url = '../../CI/index.php/api/form/signin/format/json/';
 			$http({
 				method: 'POST',
 				url: url,
 				data: user,
-				//headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			}).success(function(response){
-                alert(response);
+                console.log(response);
             }).error(function(response){
-                alert(response);
+                alert("Error!");
             })
-        
 		};
-
 	}]);
