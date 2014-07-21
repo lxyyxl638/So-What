@@ -1,0 +1,6 @@
+﻿所有response都有一个state = {success or fail}，若是fail则还有一个detail = {表示错误细节}
+界面一：注册登陆系统
+        注册：usersignup_post
+          POST: username,password,realname
+        登陆：userlogin_post
+          POST: username,password
