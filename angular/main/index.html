@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/css/bootstrap.css">
 </head>
-<body class="sowhat_main">
+<body class="sowhat">
   <div role="navigation" class="main-top">
     <div class="top-wrapper" id="top-inner">
       <a href="#/home" class="top-link-logo">so what</a>
@@ -14,16 +14,30 @@
         <form method="GET" class="top-search-form">
           <input type="text" class="top-search-input" id="q" name="q" value="" placeholder="搜索问题">
           <button type="submit" class="top-search-button">
+            <span class="glyphicon glyphicon-search"></span>
           </button>
         </form>
         <button class="top-add-question">提问</button>
       </div>
+      <div class="top-nav">
+        <ul class="top-nav-ul">
+          <li class="top-nav-li" id="top-nav-home">
+            <a class="top-nav-link" href="#/home">首页</a>
+          </li>
+          <li class="top-nav-li" id="top-nav-people">
+            <a class="top-nav-link" href="#/people">个人中心</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
       
-
-  <div ng-view></div>
-
+  <div class="sw-main" role="main">
+    <div class="sw-main-content">
+      <div ng-view></div>
+    </div>
+  </div>
+  
   <div class="footer">
     <div>
         <span>footer!</span>
