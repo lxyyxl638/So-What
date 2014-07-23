@@ -1,6 +1,34 @@
 ﻿所有response都有一个state = {success or fail}，若是fail则还有一个detail = {表示错误细节}
 界面一：注册登陆系统
-        注册：usersignup_post
+        注册：signup/usersignup_post
           POST: username,password,realname
-        登陆：userlogin_post
+        登陆：login/userlogin_post
           POST: username,password
+
+界面二：主页
+        问题广场：question_center/question_date_get
+                  id username realname title content view_num answer_num date
+        我关注的：question_center/question_focus_get
+                  id username realname title content view_num answer_num date   
+        当日精华：question_center/question_day_get
+                  id username realname title content view_num answer_num date
+            提问：question_center/question_ask_post
+            POST: title,content,tag1,tag2,tag3,tag4,tag5
+
+界面三：
+       查看某个问题：
+                  per_question/view_question_get($qid)
+                  id uid realname title content view_num answer_num date
+       回答某个问题：
+                  per_question/answer_post($qid)
+             POST:content
+       查看某个回答
+                  per_question/view_answer_get($aid,$offset)
+                  qid uid id content good bad date
+       支持某个回答
+                  per_question/good_get($aid)
+                  qid uid id content good bad date
+       反对某个回答
+                  per_question/bad_get($aid)
+                  qid uid id content good bad date
+

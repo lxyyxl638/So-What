@@ -50,7 +50,7 @@ class Signup extends REST_Controller
              $password = $this->input->post('password');
              $realname = $this->input->post('realname');
              $password = $this->encrypt->encode($password);
-             $signupdate = date("d-m-y G:i");
+             $signupdate = date('Y-m-d H:i:s',time());
              $data = array( 
                             'id' => 0,
                             'username'=> $username,
@@ -62,6 +62,16 @@ class Signup extends REST_Controller
                             'numloginfail' => 0
                            );
             $message = $this->crud->insert('user',$data);
+            $query = $this->db->get_where('user',array('username' => $username));
+            $row = $query->row_array();
+            $temp = array(
+                            'id' => 0,
+                            'uid' => $row['id'], 
+                            'realname' => $realname,
+                            'lastask' => 0
+                         );
+            $this->crud->insert('user_profile',$temp);
+
             if ($message['state'] == 'success')
                {
                      $query = $this->db->get_where('user',array('username'=>$username));
@@ -70,7 +80,9 @@ class Signup extends REST_Controller
                      $newdata = array(
                        'username' => $username,
                        'password' => $password,
-                       'uid' => $id
+                       'uid' => $id,
+                       'realname' => $realname,
+                       'status' => 'OK'
                        );             
                    $this->session->set_userdata($newdata);            
                    $message['state'] = 'success';
@@ -78,7 +90,7 @@ class Signup extends REST_Controller
               }
               else 
               {
-                 $message['detail'] = "插入数据失败";
+                 $message['detail'] = "signup fail";
                  $this->response($message,200);
               }
      }

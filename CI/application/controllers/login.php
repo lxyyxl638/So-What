@@ -35,7 +35,6 @@ class Login extends REST_Controller
     function userlogin_post()
     {
         //$data = var_dump($_POST);
-
          $username = $this->input->post('username',TRUE);
          $password = $this->input->post('password',TRUE);
          // $username = $_POST["username"];
@@ -57,7 +56,7 @@ class Login extends REST_Controller
                         $id = $row['id'];
                         $data = array( 
                                        'id' => $id,
-                                       'lastlogin' => date("d-m-y G:i"),
+                                       'lastlogin' => date('Y-m-d H:i:s',time()),
                                        'numloginfail' => '0',
                                        'lastloginfail' => '0'
                                      );
@@ -70,38 +69,40 @@ class Login extends REST_Controller
                             $newdata = array(
                                           'username' => $username,
                                           'password' => $password,
-                                          'realname' => $realname
+                                          'realname' => $realname,
+                                          'uid' => $id,
+                                          'status' => 'OK'
                                          );                      
                             $this->session->set_userdata($newdata);                
-
+                           //$this->load->view('homepage');
                             $message['state'] = 'success';
                             $this->response($message,200);
                         }
                         else
                         {
                             $message['state'] = 'fail';
-                            $message['detail'] = "登陆失败";
+                            $message['detail'] = "Add username fail";
                             $this->response($message,200);
                         }  
                     }
                     else  
                       { 
                          $message['state'] = 'fail';
-                         $message['detail'] = '密码错误';
+                         $message['detail'] = 'Wrong password';
                          $this->response($message,200);
                       }
                  }
                  else
                  {
                      $message['state'] = 'fail';
-                     $message['detail'] = '用户名不存在';
+                     $message['detail'] = "Username doesn't exist";
                      $this->response($message,200);
                  }
               }
               else
               {
                  $message['state'] = 'fail';
-                 $message['detail'] = '用户名不存在';
+                 $message['detail'] = "Username doesn't exist";
                  $this->response($message,200);
               }
             
