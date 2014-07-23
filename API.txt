@@ -4,3 +4,13 @@
           POST: username,password,realname
         登陆：userlogin_post
           POST: username,password
+
+界面二：主页
+        问题广场：question_date_get
+                  id username realname title content view_num answer_num date
+        我关注的：question_focus_get
+                  id username realname title content view_num answer_num date   
+        当日精华：question_day_get
+                  id username realname title content view_num answer_num date
+            提问：question_ask_post
+            POST: title,content,tag1,tag2,tag3,tag4,tag5

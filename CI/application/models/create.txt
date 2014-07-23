@@ -1,37 +1,36 @@
-create table q2a_answerss(
-  id int(11) not null auto_increment,
-  qid int(11) not null,
-  answer text not null,
+create table q2a_answer(
+  id int not null primary key auto_increment,
+  qid int not null,
+  content text not null,
+  comment text not null,
   username varchar(128) not null,
   good int not null,
   bad int not null,
-  date varchar(20),
-  primary key(id),
+  date timestamp,
   index(qid),
-  foreign key(qid) references q2a_questionss(id) on delete cascade on update cascade
+  foreign key(qid) references q2a_question(id) on delete cascade on update cascade
 ) default charset utf8;
 
-<?php
-   create table q2a_questionss(
-   id int(11) not null auto_increment,
+ create table q2a_question(
+   id int not null primary key auto_increment,
    username varchar(128) not null,
    realname varchar(128) not null,
    title varchar(128) not null,
-   text text not null,
-   answer_num int,
-   date varchar(20),
-   primary key (id)
-   ) default charset utf8;
-?>
+   content text not null,
+   view_num int not null,
+   answer_num int not null,
+   date timestamp not null
+  ) default charset utf8;
 
 create table user(
-  uid int not null auto_increment primary key,
+  id int not null auto_increment primary key,
   username varchar(128) not null,
-  password varchar(128),
-  signupdate varchar(20),
-  lastlogin varchar(20),
-  lastloginfail varchar(20),
-  numloginfail int
+  password varchar(128) not null,
+  realname varchar(128) not null,
+  signupdate timestamp not null,
+  lastlogin timestamp not null,
+  lastloginfail timestamp not null,
+  numloginfail int not null
 ) default charset utf8;
 
 create table user_profile(
@@ -40,6 +39,24 @@ create table user_profile(
   realname varchar(128) not null,
   email varchar(128) not null,
   photo varchar(128) not null,
+  lastask timestamp not null,
   index(uid),
-  foreign key(uid) references user(uid) on delete cascade on update cascade
-) default charset utf8
+  foreign key(uid) references user(id) on delete cascade on update cascade
+) default charset utf8;
+
+create table tag(
+  id int not null primary key auto_increment,
+  tag varchar(128) not null
+) default charset utf8;
+
+create table user_tag(
+  id int not null primary key auto_increment,
+  uid int not null,
+  tid int not null
+) default charset utf8;
+
+create table tag_question(
+  id int not null primary key auto_increment,
+  tid int not null,
+  qid int not null
+) default charset utf8;
