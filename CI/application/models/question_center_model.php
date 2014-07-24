@@ -21,7 +21,7 @@ class Question_center_model extends CI_Model
 	if (!isset($lastask) || ($datetime - $lastask) > 60)
      {	
 	   $data = array(
-	     'username' => $username,
+	     'uid' => $uid,
 	     'realname' => $realname,
 	     'date' => date('Y-m-d H:i:s',$datetime),
 	     'title' => $this->input->post('title'),
