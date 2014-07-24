@@ -38,7 +38,7 @@
     </div>
   </div>
   
-  <div class="model-dialog" id="model-dialog" tabindex="0" role="dialog">
+  <div class="model-dialog" id="model-dialog" tabindex="0" role="dialog" ng-controller="askCtrl">
     <div class="model-dialog-title">
       <span class="model-dialog-title-text">提问</span>
       <span class="model-dialog-title-close" id="model-dialog-title-close"></span>
@@ -48,14 +48,27 @@
         <form class="add-question-form">
           <div class="question-form-top">
             <div class="sw-form-text-input">
-              <textarea class="sw-editor-input" id="question-title-content" placeholder="写下你的问题"></textarea>
+              <textarea class="sw-editor-input" ng-model="q.title" placeholder="写下你的问题" contenteditable="true"></textarea>
             </div>
           </div>
           <div class="question-form-middle">
+            <div class="question-form-middle-title">
+              问题说明：
+            </div>
+            <div class="question-form-middle-detail">
+              <div class="question-form-middle-detail-wrapper">
+                <div class="question-form-middle-detail-outer">
+                  <div class="sw-editable-editor-field-wrap">
+                    <textarea class="sw-editable-editor-field" ng-model="q.content" contenteditable="true"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="question-form-bottom">
           </div>
           <div class="question-form-cmd">
+            <button class="question-button" ng-click="askquestion(q)">发布</button>
           </div>
         </form>
       </div>
