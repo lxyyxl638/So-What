@@ -1,22 +1,24 @@
 <div class="sw-main-content" ng-controller="mainCtrl">
-	<div class="sw-main-content-inner">
-		<div class="sw-section" id="sw-home-list-title">
-			最新动态
-		</div>
-		<div class="sw-main-feed" id="sw-question-list">
-			<div ng-repeat="q in qList" class="sw-main-feed-item">
-				<div class="avatar">{{q.uid}}</div>
-				<div class="feed-main">
-					<div class="feed-main-title">
-						<a class="sw-link">{{q.realname}}</a>
-						<span class="sw-time">{{q.date}}</span>
-					</div>
-					<div class="feed-main-content">
-						<h2>
-							<a class="question-link">{{q.title}}</a>
-						</h2>
-						<div class="content-body">
-							<p>{{q.content}}</p>
+	<div class="sw-main-content">
+		<div class="sw-main-content-inner">
+			<div class="sw-section" id="sw-home-list-title">
+				最新动态
+			</div>
+			<div class="sw-main-feed" id="sw-question-list">
+				<div ng-repeat="q in qList" class="sw-main-feed-item">
+					<div class="avatar">{{q.uid}}</div>
+					<div class="feed-main">
+						<div class="feed-main-title">
+							<a class="sw-link">{{q.realname}}</a>
+							<span class="sw-time">{{q.date}}</span>
+						</div>
+						<div class="feed-main-content">
+							<h2>
+								<a class="question-link">{{q.title}}</a>
+							</h2>
+							<div class="content-body">
+								<p>{{q.content}}</p>
+							</div>
 						</div>
 					</div>
 				</div>
