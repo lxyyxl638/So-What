@@ -1,0 +1,65 @@
+<div class="sw-main-content" ng-controller="mainCtrl">
+	<div class="sw-main-content-inner">
+		<div class="sw-section" id="sw-home-list-title">
+			最新动态
+		</div>
+		<div class="sw-main-feed" id="sw-question-list">
+			<div ng-repeat="q in qList" class="sw-main-feed-item">
+				<div class="avatar">{{q.uid}}</div>
+				<div class="feed-main">
+					<div class="feed-main-title">
+						<a class="sw-link">{{q.realname}}</a>
+						<span class="sw-time">{{q.date}}</span>
+					</div>
+					<div class="feed-main-content">
+						<h2>
+							<a class="question-link">{{q.title}}</a>
+						</h2>
+						<div class="content-body">
+							<p>{{q.content}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="sw-main-sidebar">
+		<div class="sw-side-section">
+			<div class="sw-side-section-inner">
+				<div class="sw-side-nav-group-first">
+					<ul class="sw-side-nav-ul" id="sw-sidebar-nav">
+						<li class="sw-side-nav-li">
+							<span class="sw-side-nav-click" ng-click="questionByDate()"><i class="sw-side-nav-icon"></i>问题广场</span>
+						</li>
+						<li class="sw-side-nav-li">
+							<span class="sw-side-nav-click" ng-click="questionByUser()"><i class="sw-side-nav-icon"></i>我的关注</span>
+						</li>
+						<li class="sw-side-nav-li">
+							<span class="sw-side-nav-click" ng-click="questionByDay()"><i class="sw-side-nav-icon"></i>当日精华</span>
+						</li>
+					</ul>
+				</div>
+				<div class="sw-footer">
+					<div class="sw-footer-wrap">
+						<ul>
+							<li>
+								<a>怎样指南</a>
+							</li>
+							<li class="sw-side-dot">
+								<a>意见反馈</a>
+							</li>
+							<li class="sw-side-dot">
+								<a>加入怎样</a>
+							</li>
+							<li class="sw-side-dot">
+								<a>怎样协议</a>
+							</li>
+						</ul>
+						<span class="copy">© 2014 怎样</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
