@@ -32,10 +32,7 @@
                   per_question/bad_get($aid)
                   qid uid id content good bad date
 
-<<<<<<< HEAD
 界面三：个人中心
         个人资料：
                  personal_center/profile_post()
             POST:email,photo       
-=======
->>>>>>> d98247ab3798a20f058d305c4126499235b283bf
