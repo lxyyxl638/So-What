@@ -6,7 +6,21 @@ var mainControllers = angular.module('mainControllers',[]);
 
 mainControllers.controller('mainCtrl',['$scope','$http',
 	function($scope,$http){
-
+		$scope.questionByDate = function() {
+			$http.get('../../CI/index.php/question_center/question_date/format/json').success(function(data){
+				$scope.qList = data;
+			});
+		}
+		$scope.questionByUser = function() {
+			$http.get('../../CI/index.php/question_center/question_focus/format/json').success(function(data){
+				$scope.qList = data;
+			});
+		}
+		$scope.questionByDay = function() {
+			$http.get('../../CI/index.php/question_center/question_day/format/json').success(function(data){
+				$scope.qList = data;
+			});
+		}
 	}]);
 
 mainControllers.controller('peopleCtrl',['$scope','$http',

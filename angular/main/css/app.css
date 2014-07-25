@@ -349,7 +349,7 @@ div{
 	display: block;
 }
 
-.sw-main-feed-on{
+.sw-main-feed{
 	border-top: 1px solid #ccc;
 }
 
@@ -453,4 +453,60 @@ div{
 .sw-footer a{
 	color: #999;
 	cursor: pointer;
+}
+
+.sw-main-feed-item{
+	padding: 10px 0;
+	position: relative;
+	margin-left: 0;
+	outline: 0;
+	border-bottom: 1px solid #999;
+}
+
+.avatar{
+	display: block;
+	width: 38px;
+	height: 38px;
+	float: left;
+	margin: 3px 0;
+}
+
+.feed-main{
+	margin-left: 48px;
+}
+
+.feed-main-title{
+	color: #999;
+}
+
+.sw-link{
+	cursor: pointer;
+	text-decoration: none;
+	color: #999;
+}
+
+.sw-time{
+	font-size: 12px;
+	display: inline-block;
+	color: #999;
+	float: right;
+}
+
+.feed-main-content h2{
+	margin-right: 20px;
+	font-weight: 700;
+	font-size: 14px;
+	outline: 0;
+	margin: 0;
+}
+
+.question-link{
+	color: #259;
+	text-decoration: none;
+	cursor: auto;
+}
+
+.content-body{
+	position: relative;
+	margin-top: 3px;
 }
