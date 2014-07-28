@@ -25,15 +25,24 @@ class Signup extends REST_Controller
         $this->load->library('form_validation');
         $this->load->model('crud');
         $this->load->library(array('session','encrypt'));
+        $this->load->model('signup_model');
     }
 
-	function usersignup_get()
+    function initial()
     {
-        
+         $xml = file_get_contents('php://input');
+         $xml = simplexml_load_string($xml);
+         foreach($xml->children() as $child)
+         { 
+             $_POST[$child->getName()] = "$child";
+         }
+         return $_POST;
     }
-    
-    function usersignup_post()
+
+    function firstsignup_post()
     {
+         $_POST = $this->initial();
+         
          if ($this->form_validation->run('signup') === FALSE)
           {
              $message['state'] = "fail";
@@ -42,18 +51,16 @@ class Signup extends REST_Controller
           }
          else 
          {
-             // $data = var_dump($_POST);
-             // $username = $_POST["username"];
-             // $password = $_POST["password"];
-             // $realname = $_POST["realname"];
-             $username = $this->input->post('username');
+             $email = $this->input->post('email');
              $password = $this->input->post('password');
-             $realname = $this->input->post('realname');
+             $lastname = $this->input->post('lastname');
+             $firstname = $this->input->post('firstname');
+             $realname = $lastname.$firstname;
              $password = $this->encrypt->encode($password);
              $signupdate = date('Y-m-d H:i:s',time());
              $data = array( 
                             'id' => 0,
-                            'username'=> $username,
+                            'email'=> $email,
                             'password'=> $password,
                             'realname' => $realname,
                             'signupdate' => $signupdate,
@@ -61,39 +68,72 @@ class Signup extends REST_Controller
                             'lastloginfail'=> 0,
                             'numloginfail' => 0
                            );
-            $message = $this->crud->insert('user',$data);
-            $query = $this->db->get_where('user',array('username' => $username));
-            $row = $query->row_array();
-            $temp = array(
-                            'id' => 0,
-                            'uid' => $row['id'], 
-                            'realname' => $realname,
-                            'lastask' => 0
-                         );
-            $this->crud->insert('user_profile',$temp);
+             $message = $this->crud->insert('user',$data);
+             $query = $this->db->get_where('user',array('email' => $email));
+             $row = $query->row_array();
+             $temp = array(
+                             'id' => 0,
+                             'uid' => $row['id'], 
+                             'realname' => $realname,
+                             'lastask' => 0
+                          );
+             $this->crud->insert('user_profile',$temp);
 
-            if ($message['state'] == 'success')
+             if ($message['state'] == 'success')
                {
-                     $query = $this->db->get_where('user',array('username'=>$username));
+                     $query = $this->db->get_where('user',array('email'=>$email));
                      $row = $query->row_array();
                      $id = $row['id'];
                      $newdata = array(
-                       'username' => $username,
+                       'email' => $email,
                        'password' => $password,
                        'uid' => $id,
                        'realname' => $realname,
                        'status' => 'OK'
                        );             
-                   $this->session->set_userdata($newdata);            
-                   $message['state'] = 'success';
-                   $this->response($message,200);
-              }
+                     $this->session->set_userdata($newdata);            
+                     $message['state'] = 'success';
+                     $this->response($message,200);
+               }
               else 
               {
                  $message['detail'] = "signup fail";
                  $this->response($message,200);
               }
-     }
+         }
             
     }
+
+    function secondsignup_post()
+    {
+       $message = '';
+       $_POST = $this->initial();
+       if (!$this->signup_model->secondsignup($message))
+       {
+          $message['state'] = "fail"; 
+       }
+       else
+       {
+          $message['state'] = "success";
+       }
+
+       $this->response($message,200);
+    }
+
+    function thirdsignup_post()
+    {
+       $message ='';
+       $_POST = $this->initial();
+       if (!$this->signup_model->thirdsignup($message))
+       {
+         $message['state'] = "fail";
+       }
+       else
+       {
+         $message['state'] = "success";
+       }
+
+       $this->response($message,200);
+    }
+
 }

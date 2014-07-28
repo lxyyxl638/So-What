@@ -1,9 +1,9 @@
 <?php $config = array(
          'signup'=>array(
 		             array(
-					        'field'=>'username',
-							'label'=>'username',
-							'rules'=>'required|min_length[6]|max_length[12]|is_unique[user.username]'
+					        'field'=>'email',
+							'label'=>'email',
+							'rules'=>'required|valid_email|is_unique[user.email]'
 					      ),
 				     array(
 					        'field'=>'password',
@@ -11,24 +11,70 @@
 							'rules'=>'required|min_length[6]|max_length[12]'
 					      ),		  
 				     array(
-					        'field'=>'realname',
-							'label'=>'realname',
+					        'field'=>'firstname',
+							'label'=>'firstname',
 							'rules'=>'required'
-					      )
+					      ),
+				     array( 
+				     	    'field'=>'lastname',
+				     	    'label'=>'lastname',
+				     	    'rules'=>'required'
+				     	  ),
 		              ),
-		'next_signup'=>array
+        'secondsignup'=>array
+                      (
+                      	 array(
+                      	 	'field'=>'gender',
+                      	 	'label'=>'gender',
+                      	 	'rules'=>'required'
+                      	 	),
+                      	 array(
+                      	 	'field'=>'job',
+                      	 	'label'=>'job',
+                      	 	'rules'=>'required',
+                      	 	),
+        	          ),
+		'thirdsignup_college'=>array
                       (
 					     array(
-					        'field'=>'realname',
-							'label'=>'姓名',
+					        'field'=>'city',
+							'label'=>'city',
 							'rules'=>'required'
 					      ),
                          array(
-					         'field'=>'email',
-							 'label'=>'Email',
-							 'rules'=>'required|valid_email'
-					       ) 						  
+					         'field'=>'school',
+							 'label'=>'school',
+							 'rules'=>'required'
+					       ),
+					     array(
+					     	  'field'=>'major',
+					     	  'label'=>'major',
+					     	  'rules'=>'required'
+					     	), 					
+					      array(
+					      	   'field'=>'year',
+					      	   'label'=>'year',
+					      	   'rules'=>'required'
+					      	)	  
 					  ),
+	    'thirdsignup_work' => array
+	                  (
+	                  	 array(
+	                  	 	 'field'=>'city',
+	                  	 	 'label'=>'city',
+	                  	 	 'rules'=>'required'
+	                  	 	),
+	                  	 array(
+	                  	 	  'field'=>'company',
+	                  	 	  'label'=>'company',
+	                  	 	  'rules'=>'required'
+	                  	 	),
+	                  	 array(
+	                  	 	   'field'=>'major',
+	                  	 	   'label'=>'major',
+	                  	 	   'rules'=>'required'
+	                  	 	)
+	    	          ),
         'change_password'=>array
                       (
 					     array(

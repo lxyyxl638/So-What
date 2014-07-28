@@ -35,18 +35,18 @@ class Login extends REST_Controller
     function userlogin_post()
     {
         //$data = var_dump($_POST);
-         $username = $this->input->post('username',TRUE);
+         $email = $this->input->post('email',TRUE);
          $password = $this->input->post('password',TRUE);
-         // $username = $_POST["username"];
+         // $email = $_POST["email"];
          // $password = $_POST["password"];
-         //$message['username'] = $_POST["username"];
+         //$message['email'] = $_POST["email"];
          //$message['password'] = $_POST["password"];
 
       //   $this->response($message,200);
 
-             if ($username !==FALSE && $password !==FALSE)
+             if ($email !==FALSE && $password !==FALSE)
               {
-                  $query = $this->db->get_where('user',array('username' => $username));
+                  $query = $this->db->get_where('user',array('email' => $email));
                  if ($query->num_rows() > 0)
                  {
                      $row = $query->row_array();
@@ -63,11 +63,11 @@ class Login extends REST_Controller
                         $message = $this->crud->insert('user',$data);
                         if ($message['state'] == "success")
                         {
-                            $query = $this->db->get_where('user',array('username' => $username));
+                            $query = $this->db->get_where('user',array('email' => $email));
                             $row = $query->row_array();
                             $realname = $row['realname'];
                             $newdata = array(
-                                          'username' => $username,
+                                          'email' => $email,
                                           'password' => $password,
                                           'realname' => $realname,
                                           'uid' => $id,
@@ -81,7 +81,7 @@ class Login extends REST_Controller
                         else
                         {
                             $message['state'] = 'fail';
-                            $message['detail'] = "Add username fail";
+                            $message['detail'] = "Add email fail";
                             $this->response($message,200);
                         }  
                     }
@@ -95,14 +95,14 @@ class Login extends REST_Controller
                  else
                  {
                      $message['state'] = 'fail';
-                     $message['detail'] = "Username doesn't exist";
+                     $message['detail'] = "email doesn't exist";
                      $this->response($message,200);
                  }
               }
               else
               {
                  $message['state'] = 'fail';
-                 $message['detail'] = "Username doesn't exist";
+                 $message['detail'] = "email doesn't exist";
                  $this->response($message,200);
               }
             
