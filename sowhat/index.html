@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="soWhatApp">
+<head>
+  <meta charset="utf-8">
+  <title>怎样</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<body>
+  <div ng-controller="appController">
+    <div role="navigation" ng-show='navBar.show'>
+      我是导航栏啊混蛋
+    </div>
+    <div ng-view></div>
+  </div>
+
+  <script src="scripts/lib/angular.min.js"></script>
+  <script src="scripts/lib/angular-route.min.js"></script>
+  <script src="scripts/lib/angular-resource.min.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/services.js"></script>
+  <script src="scripts/controllers.js"></script>
+  <script src="scripts/filters.js"></script>
+  <script src="scripts/directives.js"></script>
+
+</body>
+</html>
