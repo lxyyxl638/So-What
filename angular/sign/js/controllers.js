@@ -32,7 +32,14 @@ signControllers.controller('signinCtrl',['$scope','$http',
 				data: user,
 			}).success(function(response){
                 console.log(response);
-                window.location.assign("http://localhost/So-What/angular/main");
+                if (response.state == "success")
+                {
+                	window.location.assign("http://localhost/So-What/angular/main");
+                }
+                else
+                {
+                	alert("fail!");
+                }
             }).error(function(response){
                 alert("Error!");
             })

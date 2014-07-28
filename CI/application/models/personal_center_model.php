@@ -9,11 +9,10 @@
      	$this->load->library('session');
      }
 
-     function profile()
+     function profile(& $message);
      {
      	$uid = $this->session->userdata('uid');
-     	$username = $this->session->userdata('username');
-     	$email = $this->input->post('email');
+     	$email = $this->session->userdata('email');
         $query = $this->db->get_where('uid',$uid);
         $row = $query->row_array();
         unset($row['id']);
@@ -38,7 +37,7 @@
         }
         $config['upload_path'] = 'uploads';
         $config['allowed_types'] = 'gif|jpg|png';
-        $config['file_name'] = $username;
+        $config['file_name'] = $email;
         $config['overwrite'] = TRUE;
         $this->load->library('upload',$config)
         
@@ -58,6 +57,9 @@
             $this->load->library('image_lib',$config);
             $this->image_lib->resize();
          }
+
+         $query = $this->db->get_where('uid',$uid);
+         $message = $query->row_array();
         return TRUE;
      }
   };

@@ -1,3 +1,33 @@
+create table answer_vote(
+  uid int not null,
+  id int not null primary key auto_increment,
+  aid int not null,
+  vote int not null,
+  index(uid)
+) default charset utf8;
+
+create table user_school(
+  id int not null primary key auto_increment,
+  city varchar(16) not null,
+  school varchar(32) not null
+);
+
+create table user_company(
+  id int not null primary key auto_increment,
+  city varchar(16) not null,
+  company varchar(32) not null
+);
+
+create table user_major(
+  id int not null primary key auto_increment,
+  major varchar(32) not null
+);
+
+create table user_job(
+  id int not null primary key auto_increment,
+  job varchar(32) not null
+);
+
 create table q2a_answer(
   id int not null primary key auto_increment,
   qid int not null,
