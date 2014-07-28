@@ -40,7 +40,7 @@ class Question_center extends REST_Controller
            $this->db->order_by("date","desc");
            $query = $this->db->get('q2a_question');
            $message = $query->result_array();
-           //$message['state'] = "success";
+           $message['state'] = "success";
            $this->response($message,200);
         }
         else
@@ -62,7 +62,7 @@ class Question_center extends REST_Controller
            $order = "select * from q2a_question where id in (select distinct qid from tag_question where tid in (select tid from user_tag where uid = 5)) order by date desc";
            $query = $this->db->query($order);
            $message = $query->result_array();
-           //$message['state'] = 'success';
+           $message['state'] = 'success';
            $this->response($message,200);
         }
         else
@@ -86,7 +86,7 @@ class Question_center extends REST_Controller
         $this->db->order_by("view_num","desc");
         $query = $this->db->get('q2a_question');
         $message = $query->result_array();
-        //$message['state'] = "success";
+        $message['state'] = "success";
         $this->response($message,200);
      }
      else
