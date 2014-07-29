@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2014-07-29 02:32:52
+-- Generation Time: 2014-07-29 13:46:27
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.11
 
@@ -143,16 +143,19 @@ CREATE TABLE IF NOT EXISTS `user` (
   `lastloginfail` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `numloginfail` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- 转存表中的数据 `user`
 --
 
 INSERT INTO `user` (`id`, `email`, `password`, `realname`, `signupdate`, `lastlogin`, `lastloginfail`, `numloginfail`) VALUES
-(1, '307571482@qq.com', '3t78DzktRP7z4Zlif5oIVUIIRxe5KcwQgVPmdzsk/3Z86B2jblOEYxKpN+0SfbmHOztcocg4fLrhrSC/H4lB4w==', 'Don''t forget the meeting!Reminder', '2014-07-28 03:01:07', '2014-07-28 18:04:06', '0000-00-00 00:00:00', 0),
+(1, '307571482@qq.com', '3t78DzktRP7z4Zlif5oIVUIIRxe5KcwQgVPmdzsk/3Z86B2jblOEYxKpN+0SfbmHOztcocg4fLrhrSC/H4lB4w==', 'Don''t forget the meeting!Reminder', '2014-07-28 03:01:07', '2014-07-29 02:43:23', '0000-00-00 00:00:00', 0),
 (3, '30757148@qq.com', 'Rl4MZoQMU1sgVvWOrHwftK7NqLDC5yOJo8ADFRSVzx+MJQw7x+buVY1CnPiXc+jCOGvhI8xS/4zdq27T6tIJWQ==', 'Don''t forget the meeting!Reminder', '2014-07-28 03:08:01', '2014-07-28 03:08:01', '0000-00-00 00:00:00', 0),
-(4, 'root@gmail.com', '/o8Cz7l4eAIZZFOaMBI8zQVVjP+0SFe1emOOSJdgOf6BMN80F9+0wXqTISdGscpvJJKjpsA7mChd5UgbxPdgfA==', '我是管理员', '2014-07-28 18:31:33', '2014-07-28 18:32:03', '0000-00-00 00:00:00', 0);
+(5, 'root@gmail.com', 'I5QatMxjT9071QYLf6rudKOyXHy/DGWoEiz6UN3RI73xx1O0hS33kF1nRjzAem4G/qLD8bgGQoSP57Q1irhp/g==', '我是管理员', '2014-07-29 00:47:49', '2014-07-29 00:48:22', '0000-00-00 00:00:00', 0),
+(6, 'lxyyxl638@gmail.com', 'U0d8H495Iw1RDg+/qsfrbKF0DXhSMYpo+XZSlNj+cUWQjP7YNEwXjWkOsm0dqD9NEC4XHNaE667mosh5HvJNig==', '哦啊', '2014-07-29 03:41:36', '2014-07-29 03:41:36', '0000-00-00 00:00:00', 0),
+(7, 'lxyyxl63@gmail.com', '4dg8a7FvWBzIKHhSNMVIRAAWHVNENw4HQaALtzMMHa1JssJWNEB07coo+SpxFyA0QJ7DxYyQNC+NtsYkpQuGCQ==', '哦啊', '2014-07-29 03:41:46', '2014-07-29 03:41:46', '0000-00-00 00:00:00', 0),
+(8, 'lxyyxl6@gmail.com', '0EpdlzRE7AyeIkHGH6ME+7+Yjw+YHfOH56oku+76KvQ0OCHSJGdW1gHG0s3SHJ3k3HOQFpXvxl8pGKPwzpGkfA==', '哦啊', '2014-07-29 03:41:50', '2014-07-29 03:41:50', '0000-00-00 00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -214,11 +217,55 @@ CREATE TABLE IF NOT EXISTS `user_message` (
   `sender` varchar(128) NOT NULL,
   `message` varchar(256) NOT NULL,
   `look` int(11) NOT NULL,
+  `letter_id` int(11) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  KEY `letter_id` (`letter_id`),
   KEY `receiver` (`receiver`),
   KEY `sender` (`sender`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+
+--
+-- 转存表中的数据 `user_message`
+--
+
+INSERT INTO `user_message` (`id`, `receiver`, `sender`, `message`, `look`, `letter_id`, `date`) VALUES
+(1, '307571482@qq.com', '307571482@qq.com', 'what the fuck', 0, 1, '2014-07-29 03:13:49'),
+(2, 'root@gmail.com', '307571482@qq.com', 'what the fuck', 0, 2, '2014-07-29 03:14:31'),
+(3, 'root@gmail.com', '307571482@qq.com', 'what the fuck', 0, 2, '2014-07-29 03:15:16'),
+(4, 'root@gmail.com', '307571482@qq.com', 'what the fuck', 0, 2, '2014-07-29 03:15:19'),
+(5, 'root@gmail.com', 'lxyyxl6@gmail.com', 'what the fuck1', 0, 3, '2014-07-29 03:43:36'),
+(6, '307571482@qq.com', 'lxyyxl6@gmail.com', 'what the fuck1', 1, 4, '2014-07-29 11:34:37'),
+(7, 'lxyyxl63@gmail.com', 'lxyyxl6@gmail.com', 'what the fuck1', 0, 5, '2014-07-29 03:46:44'),
+(8, 'lxyyxl638@gmail.com', 'lxyyxl6@gmail.com', 'what the fuck10', 0, 6, '2014-07-29 03:48:06'),
+(9, 'lxyyxl6@gmail.com', '307571482@qq.com', 'fasfaf', 1, 6, '2014-07-29 11:06:28'),
+(10, 'lxyyxl6@gmail.com', '307571482@qq.com', 'fasfaf', 1, 6, '2014-07-29 11:06:28');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `user_message_date`
+--
+
+CREATE TABLE IF NOT EXISTS `user_message_date` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid_1` int(11) NOT NULL,
+  `uid_2` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+
+--
+-- 转存表中的数据 `user_message_date`
+--
+
+INSERT INTO `user_message_date` (`id`, `uid_1`, `uid_2`, `date`) VALUES
+(1, 1, 1, '0000-00-00 00:00:00'),
+(2, 1, 5, '2014-07-29 03:15:19'),
+(3, 5, 8, '2014-07-29 03:43:36'),
+(4, 1, 8, '2014-07-29 03:46:32'),
+(5, 7, 8, '2014-07-29 03:46:44'),
+(6, 6, 8, '2014-07-29 03:48:05');
 
 -- --------------------------------------------------------
 
@@ -241,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `user_profile` (
   `description` varchar(128) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- 转存表中的数据 `user_profile`
@@ -251,7 +298,10 @@ INSERT INTO `user_profile` (`id`, `uid`, `realname`, `photo`, `job`, `jobid`, `j
 (1, 1, 'Don''t forget the meeting!Reminder', '', 0, '0', '2014-07-29 00:18:44', '', '', '2014-07-28 18:18:44', 0, ''),
 (2, 1, 'Don''t forget the meeting!Reminder', '', 0, '0', '2014-07-29 00:18:44', '', '', '2014-07-28 18:18:44', 0, ''),
 (3, 3, 'Don''t forget the meeting!Reminder', '', 0, 'CS', '0000-00-00 00:00:00', '上海', '我是supery', '0000-00-00 00:00:00', 1, '我是supery'),
-(4, 4, '我是管理员', '', 0, NULL, '2014-07-29 00:31:33', '', '', '0000-00-00 00:00:00', 0, '');
+(5, 5, '我是管理员', '', 0, NULL, '2014-07-29 06:47:49', '', '', '0000-00-00 00:00:00', 0, ''),
+(6, 6, '哦啊', '', 0, NULL, '2014-07-29 09:41:36', '', '', '0000-00-00 00:00:00', 0, ''),
+(7, 7, '哦啊', '', 0, NULL, '2014-07-29 09:41:46', '', '', '0000-00-00 00:00:00', 0, ''),
+(8, 8, '哦啊', '', 0, NULL, '2014-07-29 09:41:50', '', '', '0000-00-00 00:00:00', 0, '');
 
 -- --------------------------------------------------------
 
@@ -290,6 +340,12 @@ CREATE TABLE IF NOT EXISTS `user_tag` (
 --
 ALTER TABLE `q2a_answer`
   ADD CONSTRAINT `q2a_answer_ibfk_1` FOREIGN KEY (`qid`) REFERENCES `q2a_question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- 限制表 `user_message`
+--
+ALTER TABLE `user_message`
+  ADD CONSTRAINT `user_message_ibfk_1` FOREIGN KEY (`letter_id`) REFERENCES `user_message_date` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 限制表 `user_profile`
