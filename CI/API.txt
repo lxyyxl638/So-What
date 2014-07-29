@@ -41,6 +41,19 @@
                   QA_center/bad_get($aid)
                   qid uid id content good bad date
 
+
+       关注某个问题
+                  QA_center/question_attention_get($qid)
+                  (点一下是关注，再点为取消)
+
+个人中心 
+       我的提问：Personal_center/my_question_get($limit,$offset)
+           返回：跟问题列表一样
+       我的回答：Personal_center/my_answer_get($limit,$offset)
+           返回：回答列表 + title(对应问题题目)+description（对应问题描述）
+       我关注的：Personal_center/my_attention($limit,$offset)
+           返回：跟问题列表一样
+
 私信系统：
        导航栏私信提醒：
                   Personal_center/letter_notify_get()

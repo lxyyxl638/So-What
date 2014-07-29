@@ -47,7 +47,7 @@ class signup_model extends CI_Model{
             //is a worker
             else
             {
-               if (!$this->get->company($message))
+               if (!$this->get_company($message))
                {
                   $message['detail'] = "get company fails";
                   return FALSE;
@@ -128,8 +128,8 @@ class signup_model extends CI_Model{
              {
                    $city = $this->input->post('city');
                    $company = $this->input->post('company');
-                   $major = $this->input->post('major');
-                   $query = $this->db->get_where('user_job',array('job' => $job));
+                   $position = $this->input->post('position');
+                   $query = $this->db->get_where('user_job',array('job' => $position));
                    $data = array(
                                   'city' => $city,
                                   'jobplace' => $company,
@@ -137,7 +137,7 @@ class signup_model extends CI_Model{
                    if ($query->num_rows() === 0) 
                    {
                       $tmp = array(
-                                    'major' => $major
+                                    'job' => $position
                                   );
                       if (!$this->db->insert('user_job',$tmp))
                          {
@@ -146,7 +146,7 @@ class signup_model extends CI_Model{
                          }
                    }
         
-                   $data['jobid'] = $major;
+                   $data['jobid'] = $position;
                    $this->db->where('uid',$uid);
                    if (!$this->db->update('user_profile',$data))
                    {

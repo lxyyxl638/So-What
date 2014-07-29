@@ -70,8 +70,8 @@
 	                  	 	  'rules'=>'required'
 	                  	 	),
 	                  	 array(
-	                  	 	   'field'=>'major',
-	                  	 	   'label'=>'major',
+	                  	 	   'field'=>'position',
+	                  	 	   'label'=>'position',
 	                  	 	   'rules'=>'required'
 	                  	 	)
 	    	          ),

@@ -79,6 +79,84 @@ class Personal_Center extends REST_Controller
         }
     }
   
+  /*我的提问*/
+  function my_question_get($limit = 10,$offset = 0)
+  {
+     $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->my_question($message,$limit,$offset))
+            {
+              $message['state'] = "fail";
+              $message['detail'] = "fail show questions";
+              $this->response($message,200);
+            }
+            else
+            {
+               $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+  /*我的回答*/
+  function my_answer_get($limit = 10,$offset = 0)
+  {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->my_answer($message,$limit,$offset))
+            {
+              $message['state'] = "fail";
+              $message['detail'] = "fail show answers";
+              $this->response($message,200);
+            }
+            else
+            {
+               $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+
+  /*我关注的问题*/
+  function my_attention_get($limit = 10,$offset = 0)
+  {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->my_attention($message,$limit,$offset))
+            {
+              $message['state'] = "fail";
+              $message['detail'] = "fail show attention";
+              $this->response($message,200);
+            }
+            else
+            {
+               $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+
+  /*回复或者发站内信*/
   function letter_send_post()
   {
      $status = $this->session->userdata('status');
@@ -102,6 +180,8 @@ class Personal_Center extends REST_Controller
           $this->response($message,200);
         }
   }
+
+  /*未读信息提醒*/
   function letter_notify_get()
   {
      $status = $this->session->userdata('status');
@@ -126,6 +206,7 @@ class Personal_Center extends REST_Controller
         }
   }
 
+  /*私信主页*/
   function letter_friend_get()
   {
      $status = $this->session->userdata('status');
@@ -150,6 +231,7 @@ class Personal_Center extends REST_Controller
         }
   }
 
+  /*聊天历史*/
   function letter_talk_post()
   {
      $status = $this->session->userdata('status');
@@ -173,7 +255,8 @@ class Personal_Center extends REST_Controller
           $this->response($message,200);
         }
   }
-
+  
+  /*全部设为已读*/
   function letter_set_look_get()
   {
      $status = $this->session->userdata('status');

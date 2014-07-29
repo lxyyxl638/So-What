@@ -8,16 +8,16 @@ class QA_center_model extends CI_Model
 	 $this->load->library('session');
    } 
  
- function initial()
-    {
-         $xml = file_get_contents('php://input');
-         $xml = simplexml_load_string($xml);
-         foreach($xml->children() as $child)
-         { 
-             $_POST[$child->getName()] = "$child";
-         }
-         return $_POST;
-    }
+ // function initial()
+ //    {
+ //         $xml = file_get_contents('php://input');
+ //         $xml = simplexml_load_string($xml);
+ //         foreach($xml->children() as $child)
+ //         { 
+ //             $_POST[$child->getName()] = "$child";
+ //         }
+ //         return $_POST;
+ //    }
     
  function ask(& $qid)
   {
@@ -51,7 +51,7 @@ class QA_center_model extends CI_Model
 		     $data = array(
 			                'lastask' => date('Y-m-d H:i:s',$datetime)
 			              );
-			return ($this->db->update('user_profile',$data,array('uid' => $uid)));
+			 return ($this->db->update('user_profile',$data,array('uid' => $uid)));
 		  }
 		 else return FALSE;
 	  }
@@ -89,9 +89,11 @@ class QA_center_model extends CI_Model
 	function answer($qid,$content)
 	{
 		$uid = $this->session->userdata('uid');
+		$realname = $this->session->userdata('realname');
         $data = array(
         	            'qid' => $qid,
         	            'content' => $content,
+        	            'realname' => $realname,
         	            'uid' => $uid,
         	            'good' => 0,
         	            'bad' => 0,
@@ -174,46 +176,37 @@ class QA_center_model extends CI_Model
             return $this->db->update('q2a_answer');
 		}
 	}
-	// function answer($id)
-	// {
-	//    $Username = $this->session->userdata('Username');
-	//    $query = $this->db->get_where('q2a_questions',array('id'=>$id));
-	//    $row = $query->row_array();
-	//    $title = $row['title'];
-	//    $date = date('d-m-y G:i');
-	//    $data = array(
-	//                'qid' => $id,
-	//                'title' => $title,
-	// 			   'answer' => $this->input->post('text'),
-	// 			   'username'=> $Username,
-	// 			   'good' => 0,
-	// 			   'bad' => 0,
-	// 			   'date' => $date
-	//                 );
-	//    $query = "update q2a_questions set answer_num = answer_num+1 where id = '$id'";
-	//    mysql_query($query);
-	   
-	// 	return $this->db->insert('q2a_answers',$data);			
-	// }  
-	// function good($id)
-	// {
-	//   if (!$this->session->userdata('valuation'.$id))
-	//     {
-	// 	   $this->session->set_userdata('valuation'.$id,true);
-	// 	   $query = "update q2a_answers set good=good+1 where qid='$id'";
-	// 	   return mysql_query($query);  
-	// 	} 
-	//    else return false;	
-	// }
-	// function bad($id)
-	// {
-	//   if (!$this->session->userdata('valuation'.$id))
-	//     {
-	// 	   $this->session->set_userdata('valuation'.$id,true);
-	// 	   $query = "update q2a_answers set bad=bad+1 where qid='$id'";
-	// 	   return mysql_query($query);
-	// 	}
-	//   else return false;  
-	// }
+	
+	function question_attention($qid)
+	{
+		$uid = $this->session->userdata('uid');
+		$query = $this->db->get_where('user_question',array('uid' => $uid,'qid' => $qid));
+		if ($query->num_rows() > 0)
+		{
+		   if (!$this->db->delete('user_question',array('uid' => $uid,'qid' => $qid)))
+		   {
+		   	  $message['detail'] = "delete fails";
+		   	  return FALSE;
+		   }			
+		   else 
+		   {
+		   	  return TRUE;
+		   }
+		}
+		else
+		{
+			$data = array(
+				            'uid' => $uid,
+				            'qid' => $qid,
+				            'date' => date('Y-m-d H:i:s',time())
+				         );
+			if (!$this->db->insert('user_question',$data))
+			{
+				$message['detail'] = "insert user_question fails";
+				return FALSE;
+			}
+			return TRUE;
+		}
+	}
  }
 ?>

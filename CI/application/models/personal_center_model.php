@@ -63,6 +63,58 @@
         return TRUE;
      }
 
+     /*我的提问*/
+     function my_question(& $message,$limit = 10,$offset = 0)
+     {
+        $uid = $this->session->userdata('uid');
+        $this->db->order_by('date','desc');
+        $this->db->limit($limit,$offset);
+        $query = $this->db->get_where('q2a_question',array('uid'=>$uid));
+        $message = $query->result_array();
+        return TRUE;
+     }
+     
+     /*我的回答*/
+     function my_answer(& $message,$limit = 10,$offset = 0)
+     {
+        $uid = $this->session->userdata('uid');
+        $this->db->order_by('date','desc');
+        $this->db->where('uid',$uid);
+        $this->db->limit($limit,$offset);
+        $query = $this->db->get('q2a_answer');
+        $result = $query->result_array();
+        foreach ($result as $key => $value)
+        {
+            $qid = $value['qid'];
+            $this->db->where('id',$qid);
+            $query = $this->db->get('q2a_question');
+            $row = $query->row_array();
+            $value['title'] = $row['title'];
+            $value['description'] = $row['content'];
+            $message[$key] = $value;
+        }
+        return TRUE;
+     }
+    /*我关注的问题*/
+
+    function my_attention(& $message,$limit = 10,$offset = 0)
+    {
+        $uid = $this->session->userdata('uid');
+        $this->db->order_by('date','desc');
+        $this->db->select('qid');
+        $this->db->where('uid',$uid);
+        $this->db->limit($limit,$offset);
+        $query = $this->db->get('user_question');
+        $result = $query->result_array();
+        foreach ($result as $key => $value)
+         {
+            $qid = $value['qid'];
+            $query = $this->db->get_where('q2a_question',array('id' => $qid));
+            $message[$key] = $query->row_array();
+         }
+        return TRUE;
+    }
+
      function letter_send(& $message)
      {
          if ($this->form_validation->run('letter_send') === FALSE)

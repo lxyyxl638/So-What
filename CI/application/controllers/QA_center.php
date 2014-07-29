@@ -110,7 +110,7 @@ function initial()
 /*提问*/
   function question_ask_post()
     {
-        $_POST = $this->initial();
+        //$_POST = $this->initial();
         $status = $this->session->userdata('status');
 
         if (isset($status) && $status === 'OK')
@@ -187,7 +187,7 @@ function initial()
 /*添加回答*/
   function answer_post($qid)
    {
-     $_POST = $this->initial();
+    // $_POST = $this->initial();
      $status = $this->session->userdata('status');
 
      if (isset($status) && $status === 'OK')
@@ -297,5 +297,29 @@ function initial()
          $message['detail'] = "You didn't login!";
          $this->response($message,200);
       }
+  }
+
+  function question_attention_get($qid)
+  {
+      $message = '';
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+           if (!$this->QA_center_model->question_attention($qid))
+           {
+              $message['state'] = "fail";
+              $this->response($message,200);
+           }
+           else
+           {
+              $this->response($message,200);
+           }
+        }
+        else
+        {
+           $message['state'] = "fail";
+           $message['detail'] = "You didn't login!";
+           $this->response($message,200);
+        }
   }
 }
