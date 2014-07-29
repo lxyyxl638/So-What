@@ -93,13 +93,18 @@
 							'rules'=>'required|matches[NewPassword]'
 					       )						   
 					  ),
-		'sites' => array
+		'letter_send' => array
 		          (
 		          	array(
-		          		'field' => 'name',
-		          		'label' => 'name',
+		          		'field' => 'receiver',
+		          		'label' => 'receiver',
 		          		'rules' => 'required'
-		          		) 
+		          		),
+		          	array(
+		          		'field' => 'letter',
+		          		'label' => 'letter',
+		          		'rules' => 'required'
+		          		),
 		          )			  						  
 					  
                );			   

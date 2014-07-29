@@ -107,6 +107,28 @@
   line-height: 17px; 
 }
 
+.inputBoxName{
+  background-color: rgb(231,241,248);
+  font-size: 15px;
+  border-color: rgb(0,62,112);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 8px 10px;
+  width: 90px;
+  margin: 0;
+  color: #555;
+  line-height: 17px; 
+}
+
+#lastName{
+  float: left;
+}
+
+#firstName{
+  float: right;
+}
+
 .signbutton {
   border:1px solid #1D80CF;
   width: 100%;

@@ -41,7 +41,7 @@ class Signup extends REST_Controller
 
     function firstsignup_post()
     {
-         $_POST = $this->initial();
+        // $_POST = $this->initial();
          
          if ($this->form_validation->run('signup') === FALSE)
           {

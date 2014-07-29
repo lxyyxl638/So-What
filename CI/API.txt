@@ -31,8 +31,8 @@
        回答某个问题：
                   QA_center/answer_post($qid)
              POST:content
-       查看某个回答
-                  QA_center/view_answer_get($aid,$offset)
+       查看对应问题回答
+                  QA_center/view_answer_get($qid,$offset)
                   qid uid id content good bad date
        支持某个回答
                   QA_center/good_get($aid)
@@ -41,3 +41,20 @@
                   QA_center/bad_get($aid)
                   qid uid id content good bad date
 
+私信系统：
+       导航栏私信提醒：
+                  Personal_center/letter_notify_get()
+              GET:sum(表示未读消息读书)
+       私信主页面：
+                  Personal_center/letter_friend_get()
+              GET:uid realname date （此为一串信息）
+                  (uid 表示通信人id，realname 为名字，date为最后一条信息时间)
+       点进聊天框：
+                  Personal_center/letter_friend_post()
+              POST: uid(对话对方uid,即上面传递的uid)
+              返回：receiver sender message date(已经按时间排过序)
+       设置全部为已读：
+                  Personal_center/letter_set_look_get()
+       
+       回复/对话：Personal_center/letter_send_post()
+              POST:receiver(要email)，letter

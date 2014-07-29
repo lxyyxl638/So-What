@@ -162,7 +162,7 @@ function initial()
     }
 
 /*查看问题回答*/
-  function view_answer_get($qid,$offset)  
+  function view_answer_get($qid,$offset = 0)  
     {
         $status = $this->session->userdata('status');
 

@@ -41,6 +41,10 @@ class Personal_Center extends REST_Controller
               $message['detail'] = "fail change profile";
               $this->response($message,200);
             }
+            else
+            {
+               $this->response($message,200);
+            }
         }
         else
         {
@@ -62,6 +66,10 @@ class Personal_Center extends REST_Controller
             	$message['detail'] = "fail change profile";
             	$this->response($message,200);
             }
+            else
+            {
+               $this->response($message,200);
+            }
         }
         else
         {
@@ -82,6 +90,10 @@ class Personal_Center extends REST_Controller
               $message['state'] = "fail";
               $this->response($message,200);
             }
+            else
+            {
+              $this->response($message,200);
+            }
         }
         else
         {
@@ -99,6 +111,10 @@ class Personal_Center extends REST_Controller
             if (!$this->Personal_center_model->letter_notify($message))
             {
               $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
               $this->response($message,200);
             }
         }
@@ -121,6 +137,10 @@ class Personal_Center extends REST_Controller
               $message['state'] = "fail";
               $this->response($message,200);
             }
+            else
+            {
+              $this->response($message,200);
+            }
         }
         else
         {
@@ -130,7 +150,7 @@ class Personal_Center extends REST_Controller
         }
   }
 
-  function letter_talk_get()
+  function letter_talk_post()
   {
      $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
@@ -139,6 +159,34 @@ class Personal_Center extends REST_Controller
             if (!$this->Personal_center_model->letter_talk($message))
             {
               $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
+              $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+
+  function letter_set_look_get()
+  {
+     $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->set_look($message))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
               $this->response($message,200);
             }
         }

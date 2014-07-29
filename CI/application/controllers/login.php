@@ -45,7 +45,7 @@ class Login extends REST_Controller
 
     function userlogin_post()
     {
-        $_POST = $this->initial();
+        //$_POST = $this->initial();
         //$data = var_dump($_POST);
          $email = $this->input->post('email',TRUE);
          $password = $this->input->post('password',TRUE);
