@@ -7,54 +7,75 @@ create table answer_vote(
 ) default charset utf8;
 
 create table user_school(
+  city varchar(128) not null,
+  school varchar(128) not null,
   id int not null primary key auto_increment,
-  city varchar(16) not null,
-  school varchar(32) not null
-);
+  index(city),
+  index(school)
+) default charset utf8;
 
 create table user_company(
+  city varchar(128) not null,
+  company varchar(128) not null,
   id int not null primary key auto_increment,
-  city varchar(16) not null,
-  company varchar(32) not null
-);
+  index(city),
+  index(company)
+) default charset utf8;
 
 create table user_major(
+  major varchar(128) not null,
   id int not null primary key auto_increment,
-  major varchar(32) not null
-);
+  index(major)
+) default charset utf8;
 
 create table user_job(
+  job varchar(32) not null,
   id int not null primary key auto_increment,
-  job varchar(32) not null
-);
+  index(job)
+) default charset utf8;
+
+create table user_message(
+  id int not null primary key auto_increment,
+  receiver varchar(128) not null,
+  sender varchar(128) not null,
+  message varchar(256) not null,
+  look int not null,
+  index(receiver),
+  index(sender)
+) default charset utf8;
 
 create table q2a_answer(
   id int not null primary key auto_increment,
+  uid int not null,
   qid int not null,
   content text not null,
-  comment text not null,
-  username varchar(128) not null,
+  email varchar(128) not null,
+  realname varchar(128) not null,
   good int not null,
   bad int not null,
   date timestamp,
   index(qid),
+  index(uid),
   foreign key(qid) references q2a_question(id) on delete cascade on update cascade
 ) default charset utf8;
 
  create table q2a_question(
    id int not null primary key auto_increment,
-   username varchar(128) not null,
+   uid int not null,
+   email varchar(128) not null,
    realname varchar(128) not null,
    title varchar(128) not null,
    content text not null,
    view_num int not null,
+   likenum int not null,
    answer_num int not null,
-   date timestamp not null
+   date timestamp not null,
+   index(uid)
   ) default charset utf8;
 
 create table user(
   id int not null auto_increment primary key,
-  username varchar(128) not null,
+  email varchar(128) not null,
   password varchar(128) not null,
   realname varchar(128) not null,
   signupdate timestamp not null,
@@ -67,12 +88,22 @@ create table user_profile(
   id int not null primary key auto_increment,
   uid int not null,
   realname varchar(128) not null,
-  email varchar(128) not null,
   photo varchar(128) not null,
+  job int not null,
+  jobid int not null,
+  jobtime timestamp not null,
+  city varchar(128) not null,
+  jobplace varchar(128) not null,
   lastask timestamp not null,
   index(uid),
   foreign key(uid) references user(id) on delete cascade on update cascade
 ) default charset utf8;
+
+create table city(
+  id int not null primary key auto_increment,
+  city varchar(128) not null 
+) default charset utf8;
+
 
 create table tag(
   id int not null primary key auto_increment,

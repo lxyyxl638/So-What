@@ -25,7 +25,17 @@ class QA_center extends REST_Controller
         $this->load->model('crud');
         $this->load->library('encrypt');
         $this->load->library('session');
-        $this->load->model('QA_model');
+        $this->load->model('QA_center_model');
+    }
+function initial()
+    {
+         $xml = file_get_contents('php://input');
+         $xml = simplexml_load_string($xml);
+         foreach($xml->children() as $child)
+         { 
+             $_POST[$child->getName()] = "$child";
+         }
+         return $_POST;
     }
 
 /*显示一个月内的提问*/
@@ -100,14 +110,15 @@ class QA_center extends REST_Controller
 /*提问*/
   function question_ask_post()
     {
+        $_POST = $this->initial();
         $status = $this->session->userdata('status');
 
         if (isset($status) && $status === 'OK')
         {
            $qid = 0;
-           if ($this->Question_center_model->ask($qid)!==FALSE)
+           if ($this->QA_center_model->ask($qid)!==FALSE)
             {
-                 $this->Question_center_model->tag($qid);
+                 $this->QA_center_model->tag($qid);
                  $message['state'] = "success";
                  $this->response($message,200);
             }
@@ -176,6 +187,7 @@ class QA_center extends REST_Controller
 /*添加回答*/
   function answer_post($qid)
    {
+     $_POST = $this->initial();
      $status = $this->session->userdata('status');
 
      if (isset($status) && $status === 'OK')

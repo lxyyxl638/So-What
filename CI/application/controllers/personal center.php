@@ -71,5 +71,82 @@ class Personal_Center extends REST_Controller
         }
     }
   
+  function letter_send_post()
+  {
+     $status = $this->session->userdata('status');
+    if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->letter_send($message))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+  function letter_notify_get()
+  {
+     $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->letter_notify($message))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
 
+  function letter_friend_get()
+  {
+     $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->letter_friend($message))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+
+  function letter_talk_get()
+  {
+     $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->letter_talk($message))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
 }

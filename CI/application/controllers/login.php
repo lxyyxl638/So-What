@@ -32,8 +32,20 @@ class Login extends REST_Controller
         
     }
     
+    function initial()
+    {
+         $xml = file_get_contents('php://input');
+         $xml = simplexml_load_string($xml);
+         foreach($xml->children() as $child)
+         { 
+             $_POST[$child->getName()] = "$child";
+         }
+         return $_POST;
+    }
+
     function userlogin_post()
     {
+        $_POST = $this->initial();
         //$data = var_dump($_POST);
          $email = $this->input->post('email',TRUE);
          $password = $this->input->post('password',TRUE);
@@ -76,6 +88,10 @@ class Login extends REST_Controller
                             $this->session->set_userdata($newdata);                
                            //$this->load->view('homepage');
                             $message['state'] = 'success';
+                            if ($email === "root@gmail.com")
+                            {
+                               $message['state'] = 'root';
+                            }
                             $this->response($message,200);
                         }
                         else

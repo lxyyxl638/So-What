@@ -7,11 +7,22 @@ class QA_center_model extends CI_Model
 	 $this->load->database();
 	 $this->load->library('session');
    } 
-  
+ 
+ function initial()
+    {
+         $xml = file_get_contents('php://input');
+         $xml = simplexml_load_string($xml);
+         foreach($xml->children() as $child)
+         { 
+             $_POST[$child->getName()] = "$child";
+         }
+         return $_POST;
+    }
+    
  function ask(& $qid)
   {
     $uid = $this->session->userdata('uid');
-    $username = $this->session->userdata('username');
+    $email = $this->session->userdata('email');
 	$realname = $this->session->userdata('realname');
 	$datetime = time();
 	$query = $this->db->get_where('user_profile',array('uid' => $uid));
@@ -26,6 +37,7 @@ class QA_center_model extends CI_Model
 	     'date' => date('Y-m-d H:i:s',$datetime),
 	     'title' => $this->input->post('title'),
 	     'content' => $this->input->post('content'),
+	     'like_num' => 0,
 	     'view_num' => 0,
 	     'answer_num' => 0
 	     );
