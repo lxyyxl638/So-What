@@ -8,7 +8,7 @@ signControllers.controller('signupCtrl',['$scope','$http',
 	function($scope,$http){
 
 		$scope.register = function(user){
-			var url = '../../CI/index.php/signup/usersignup/format/json/';
+			var url = '../../CI/index.php/signup/firstsignup/format/json/';
 			$http({
 				method: 'POST',
 				url: url,
@@ -35,6 +35,10 @@ signControllers.controller('signinCtrl',['$scope','$http',
                 if (response.state == "success")
                 {
                 	window.location.assign("http://localhost/So-What/angular/main");
+                }
+                else if(response.state == "root")
+                {
+                	window.location.assign("http://localhost/So-What/angular/admin");
                 }
                 else
                 {

@@ -41,7 +41,7 @@ class Signup extends REST_Controller
 
     function firstsignup_post()
     {
-         $_POST = $this->initial();
+         //$_POST = $this->initial();
          
          if ($this->form_validation->run('signup') === FALSE)
           {
@@ -107,7 +107,7 @@ class Signup extends REST_Controller
     function secondsignup_post()
     {
        $message = '';
-       $_POST = $this->initial();
+       //$_POST = $this->initial();
        if (!$this->signup_model->secondsignup($message))
        {
           $message['state'] = "fail"; 
@@ -123,7 +123,7 @@ class Signup extends REST_Controller
     function thirdsignup_post()
     {
        $message ='';
-       $_POST = $this->initial();
+       //$_POST = $this->initial();
        if (!$this->signup_model->thirdsignup($message))
        {
          $message['state'] = "fail";

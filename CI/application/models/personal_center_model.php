@@ -62,5 +62,49 @@
          $message = $query->row_array();
         return TRUE;
      }
+
+     function letter_send(& $message)
+     {
+         if ($this->form_validation->run('letter_send') === FALSE)
+         {
+             $message['detail'] = "some inputs are unavailable";
+             return FALSE;
+         }
+         else
+         {
+             $sender = $this->session->userdata('email');
+             $receiver = $this->input->post('receiver');
+             $message = $this->input->post('message');
+             $data = array(
+                            'sender' => $sender,
+                            'receiver' => $receiver,
+                            'message' => $message,
+                            'look' => 0,
+                            'date' => date('Y-m-d H:i:s',time())
+                          );
+             if (!$this->db->insert('user_message',$data))
+             {
+                $message['detail'] = "insert wrong";
+                return FALSE;
+             }
+             else
+             {
+                return TRUE;
+             }
+         }
+     }
+
+     function letter_notify(& $message)
+     {
+        $receiver = $this->session->userdata('email');
+        $query = $this->db->get_where('user_message',array('receiver' => $receiver,'look' => '0'));
+        $message['sum'] = $query->num_rows();
+        return TRUE; 
+     }
+
+     function letter_friend(& $message)
+     {
+         $
+     }
   };
 ?>
