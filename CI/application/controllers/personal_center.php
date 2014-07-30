@@ -280,4 +280,42 @@ class Personal_Center extends REST_Controller
           $this->response($message,200);
         }
   }
+  
+
+  /*关注问题有了新回答*/
+
+  function attention_new_answer_get()
+  {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->attention_new_answer($message))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
+              $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+
+  function attention_new_answer(& $message)
+  {
+       $uid = $this->session->userdata('uid');
+       $flushtime_of_new_answer = time();
+       $this->db->where('uid',$uid);
+       $data = array( 
+                      'flushtime_of_new_answer' = date('Y-m-d H:i:s',$flushtime_of_new_answer);
+                    )
+       $this->db->update('user_profile',)
+  }
 }

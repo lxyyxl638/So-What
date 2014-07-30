@@ -71,3 +71,11 @@
        
        回复/对话：Personal_center/letter_send_post()
               POST:receiver(要email)，letter
+
+
+常用函数：
+       得到realname：
+                public_function/myrealname_get()
+                返回当前 myrealname
+                public_function/uidrealname_get($uid)
+                返回uid对应的 uidrealname
