@@ -49,7 +49,13 @@ function initial()
            $this->db->where('date >',$time_point);
            $this->db->order_by("date","desc");
            $query = $this->db->get('q2a_question');
-           $message = $query->result_array();
+           $result = $query->result_array();
+           foreach ($result as $key => $value)
+           {
+              $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
+              $value['follow'] = $this->QA_center_model->get_follow($value['id']);
+              $message[$key] = $value;
+           }
            //$message['state'] = "success";
            $this->response($message,200);
         }
@@ -68,10 +74,17 @@ function initial()
 
         if (isset($status) && $status === 'OK')
         {
+           $message = '';
            $uid = $this->session->userdata('uid');
            $order = "select * from q2a_question where id in (select distinct qid from tag_question where tid in (select tid from user_tag where uid = 5)) order by date desc";
            $query = $this->db->query($order);
-           $message = $query->result_array();
+           $result = $query->result_array();
+           foreach ($result as $key => $value)
+           {
+              $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
+              $value['follow'] = $this->QA_center_model->get_follow($value['id']);
+              $message[$key] = $value;
+           }
            //$message['state'] = 'success';
            $this->response($message,200);
         }
@@ -95,7 +108,13 @@ function initial()
         $this->db->where('date >',$time_point);
         $this->db->order_by("view_num","desc");
         $query = $this->db->get('q2a_question');
-        $message = $query->result_array();
+        $result = $query->result_array();
+           foreach ($result as $key => $value)
+           {
+              $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
+              $value['follow'] = $this->QA_center_model->get_follow($value['id']);
+              $message[$key] = $value;
+           }
         //$message['state'] = "success";
         $this->response($message,200);
      }
@@ -305,8 +324,34 @@ function initial()
       $message = '';
       $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
+        { 
+           $follow = 0;
+           if (!$this->QA_center_model->question_attention($qid,$follow))
+           {
+              $message['state'] = "fail";
+              $this->response($message,200);
+           }
+           else
+           {
+              $message['follow'] = $follow;
+              $this->response($message,200);
+           }
+        }
+        else
         {
-           if (!$this->QA_center_model->question_attention($qid))
+           $message['state'] = "fail";
+           $message['detail'] = "You didn't login!";
+           $this->response($message,200);
+        }
+  }
+
+  function get_answer_get($aid)
+  {
+      $message = '';
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        { 
+           if (!$this->QA_center_model->get_answer($message,$aid))
            {
               $message['state'] = "fail";
               $this->response($message,200);

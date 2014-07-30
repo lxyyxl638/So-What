@@ -192,7 +192,7 @@ class QA_center_model extends CI_Model
 		}
 	}
 	
-	function question_attention($qid)
+	function question_attention($qid,$follow)
 	{
 		$uid = $this->session->userdata('uid');
 		$query = $this->db->get_where('user_question',array('uid' => $uid,'qid' => $qid));
@@ -205,6 +205,7 @@ class QA_center_model extends CI_Model
 		   }			
 		   else 
 		   {
+		   	  $follow = 0;
 		   	  return TRUE;
 		   }
 		}
@@ -222,9 +223,50 @@ class QA_center_model extends CI_Model
 			}
 			else
 			{
+			   $follow = 1;
 			   return TRUE;
 			}
 		}
+	}
+   
+   /*检测当前用户是否关注此问题*/
+	function get_follow($qid)
+	{
+		$uid = $this->session->userdata('uid');
+		$query = $this->db->get_where('user_question',array('uid' => $uid,'qid' => $qid));
+		if ($query->num_rows() > 0)
+		{
+            return "1";
+		}
+		else
+		{
+            return "0";
+		}
+	}
+
+	function get_best_answer($qid)
+	{ 
+		$this->db->select('id');
+		$this->db->where('qid',$qid);
+		$this->db->order_by('good desc,bad asc');
+		$query = $this->db->get('q2a_answer');
+		if ($query->num_rows() > 0)
+		{
+		    $row = $query->row_array();
+            return $row['id'];
+        }
+        else
+        {
+        	return '0';
+        }
+	}
+
+	function get_answer(& $message,$aid)
+	{
+		$this->db->where('id',$aid);
+		$query = $this->db->get('q2a_answer');
+		$message = $query->row_array();
+		return TRUE;
 	}
  }
 ?>

@@ -16,13 +16,16 @@
  
 界面二：主页
         问题广场：QA_center/question_date_get
-                  id username realname title content view_num answer_num date
+                  id username realname title content view_num answer_num date follow best_answer
         我关注的：QA_center/question_focus_get
-                  id username realname title content view_num answer_num date   
+                  id username realname title content view_num answer_num date follow best_answer  
         当日精华：QA_center/question_day_get
-                  id username realname title content view_num answer_num date
+                  id username realname title content view_num answer_num date follow best_answer
             提问：QA/question_ask_post
             POST: title,content,tag1,tag2,tag3,tag4,tag5
+        提取特定答案：
+                  QA_center/get_answer_get($aid)
+            返回：回答的所有信息
 
 界面三：
        查看某个问题：

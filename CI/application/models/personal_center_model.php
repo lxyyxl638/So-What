@@ -50,10 +50,23 @@
          	$data = $this->upload->data();
          	$config['image_library'] = 'gd2';
          	$config['source_image'] = $data['full_path'];
+            $config['new_image'] = $data['file_path'].$email."_large".$data['file_ext'];
          	$config['create_thumb'] = TRUE;
             $config['maintain_ratio'] = TRUE;
-            $config['width'] = 75;
-            $config['height'] = 50;
+            $config['width'] = 100;
+            $config['height'] = 100;
+            $this->load->library('image_lib',$config);
+            $this->image_lib->resize();
+
+            $config['new_image'] = $data['file_path'].$email."_middle".$data['file_ext'];
+            $config['width'] = 38;
+            $config['height'] = 38;
+            $this->load->library('image_lib',$config);
+            $this->image_lib->resize();
+
+            $config['new_image'] = $data['file_path'].$email."_small".$data['file_ext'];
+            $config['width'] = 27;
+            $config['height'] = 27;
             $this->load->library('image_lib',$config);
             $this->image_lib->resize();
          }
