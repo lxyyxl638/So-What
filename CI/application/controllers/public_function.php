@@ -43,6 +43,23 @@ class Public_function extends REST_Controller
         }
         $this->response($message,200);
     }
+ 
+  function myuid_get()
+    {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+           $message['myuid'] = $this->session->userdata('uid');
+           $this->response($message,200);
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+        $this->response($message,200);
+    }
 
     function uidrealname_get($uid)
     {

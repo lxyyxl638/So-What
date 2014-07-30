@@ -308,14 +308,5 @@ class Personal_Center extends REST_Controller
         }
   }
 
-  function attention_new_answer(& $message)
-  {
-       $uid = $this->session->userdata('uid');
-       $flushtime_of_new_answer = time();
-       $this->db->where('uid',$uid);
-       $data = array( 
-                      'flushtime_of_new_answer' = date('Y-m-d H:i:s',$flushtime_of_new_answer);
-                    )
-       $this->db->update('user_profile',)
-  }
+  
 }

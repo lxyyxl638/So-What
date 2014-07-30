@@ -247,5 +247,41 @@
             };
         return TRUE;
      }
-  };
+
+     function attention_new_answer(& $message)
+     {
+          $uid = $this->session->userdata('uid');
+          $this->db->select('flushtime_of_new_answer');
+          $this->db->where('uid',$uid);
+          $query = $this->db->get('user_profile');
+          $row = $query->row_array();
+          $timepoint = $row['flushtime_of_new_answer'];
+
+          $this->db->select('qid');
+          $this->db->where('uid',$uid);
+          $query = $this->db->get('user_question');
+          $result = $query->result_array();
+
+          foreach ($result as $key => $value)
+          {
+             $qid = $value['qid'];
+             $this->db->select('uid');
+             $this->db->where('qid',$qid);
+             $this->db->where('date >',$timepoint);
+             $this->db->order_by('date','desc');
+             $query = $this->db->get('q2a_answer');
+             $value['uid'] = $query->result_array();
+             $message[$key] = $value;
+          }
+          
+          $flushtime_of_new_answer = time();
+          $this->db->where('uid',$uid);
+          $data = array( 
+                         'flushtime_of_new_answer' = date('Y-m-d H:i:s',$flushtime_of_new_answer);
+                       )
+          $this->db->update('user_profile',$data);
+
+          return TRUE;
+     }
+};
 ?>
