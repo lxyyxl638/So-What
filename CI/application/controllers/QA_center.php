@@ -225,12 +225,12 @@ function initial()
      }
    }
 
-  function good_get($aid)
+  function good_get($qid,$aid)
   {
       $status = $this->session->userdata('status');
       if (isset($status) && $status === 'OK')
       {
-          if ($this->QA_center_model->good($aid) != FALSE)
+          if ($this->QA_center_model->good($qid,$aid) != FALSE)
           {
              $this->db->select('good,bad');
              $query = $this->db->get_where('q2a_answer',array('id' => $aid));
@@ -262,12 +262,12 @@ function initial()
       }
   }
 
-  function bad_get($aid)
+  function bad_get($qid,$aid)
   {
       $status = $this->session->userdata('status');
       if (isset($status) && $status === 'OK')
       {
-          if ($this->QA_center_model->bad($aid) != FALSE)
+          if ($this->QA_center_model->bad($qid,$aid) != FALSE)
           {
              $this->db->select('good,bad');
              $query = $this->db->get_where('q2a_answer',array('id' => $aid));
@@ -299,6 +299,7 @@ function initial()
       }
   }
 
+/*（取消）关注某个问题*/
   function question_attention_get($qid)
   {
       $message = '';

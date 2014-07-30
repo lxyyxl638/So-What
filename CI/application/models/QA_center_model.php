@@ -7,6 +7,7 @@ class QA_center_model extends CI_Model
 	 $this->load->database();
 	 $this->load->library('session');
    } 
+
  
  // function initial()
  //    {
@@ -99,13 +100,20 @@ class QA_center_model extends CI_Model
         	            'bad' => 0,
         	            'date' => date('Y-m-d H:i:s',time())
         	         );
-        return $this->db->insert('q2a_answer',$data);
-        // $query = "select db2_last_insert_id(resource)"
-        // $aid = $this->db->query($query);
-
+        $this->db->insert('q2a_answer',$data);
+        $this->db->select('id');
+        $query = $this->db->get_where('q2a_answer',array('qid'=>$qid,'uid'=>$uid));
+        $row = $query->row_array();
+        $aid = $row['id'];
+        $data = array(
+        	           'uid' => $uid,
+        	           'aid' => $aid
+                      );
+        $this->db->insert('answer_good',$data);
+        return TRUE;
 	}
 
-	function good($aid)
+	function good($qid,$aid)
 	{
 		$uid = $this->session->userdata('uid');
 		$query = $this->db->get_where('answer_vote',array('uid' => $uid,'aid' => $aid));
@@ -130,18 +138,24 @@ class QA_center_model extends CI_Model
 		else
 		{
             $data = array(
+            	        'qid' => $qid,
             	        'uid' => $uid,
             	        'aid' => $aid,
             	        'vote' => 1 
             	         );
             $this->db->insert('answer_vote',$data);
+            $data = array(
+            	         'uid' => $uid,
+            	         'aid' => $aid
+            	         );
+            
             $this->db->set('good','good + 1',FALSE);
             $this->db->where('id',$aid);
             return $this->db->update('q2a_answer');
 		}
 	}
 
-	function bad($aid)
+	function bad($qid,$aid)
 	{
 		$uid = $this->session->userdata('uid');
 		$query = $this->db->get_where('answer_vote',array('uid' => $uid,'aid' => $aid));
@@ -166,6 +180,7 @@ class QA_center_model extends CI_Model
 		else
 		{
             $data = array(
+            	        'qid' => $qid,
             	        'uid' => $uid,
             	        'aid' => $aid,
             	        'vote' => -1 
@@ -183,7 +198,7 @@ class QA_center_model extends CI_Model
 		$query = $this->db->get_where('user_question',array('uid' => $uid,'qid' => $qid));
 		if ($query->num_rows() > 0)
 		{
-		   if (!$this->db->delete('user_question',array('uid' => $uid,'qid' => $qid)))
+		   if ((!$this->db->delete('user_question',array('uid' => $uid,'qid' => $qid)))||(!$this->db->delete('attention_new_answer',array('uid'=>$uid,'qid'=>$qid))))
 		   {
 		   	  $message['detail'] = "delete fails";
 		   	  return FALSE;
@@ -197,15 +212,18 @@ class QA_center_model extends CI_Model
 		{
 			$data = array(
 				            'uid' => $uid,
-				            'qid' => $qid,
-				            'date' => date('Y-m-d H:i:s',time())
+				            'qid' => $qid
+				            //'date' => date('Y-m-d H:i:s',time())
 				         );
-			if (!$this->db->insert('user_question',$data))
+			if ((!$this->db->insert('user_question',$data)) || (!$this->db->insert('attention_new_answer',$data)))
 			{
 				$message['detail'] = "insert user_question fails";
 				return FALSE;
 			}
-			return TRUE;
+			else
+			{
+			   return TRUE;
+			}
 		}
 	}
  }

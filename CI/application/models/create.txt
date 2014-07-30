@@ -35,12 +35,14 @@ create table user_job(
 ) default charset utf8;
 
 create table user_message(
-  id int not null primary key,
+  id int not null primary key auto_increment,
   receiver varchar(128) not null,
   sender varchar(128) not null,
   message varchar(256) not null,
   look int not null,
-  foreign key(id) references user_message_date(id) on delete cascade on update cascade,
+  letter_id int not null,
+  date timestamp not null,
+  foreign key(letter_id) references user_message_date(id) on delete cascade on update cascade,
   index(receiver),
   index(sender)
 ) default charset utf8;
@@ -117,6 +119,13 @@ create table user_tag(
   tid int not null
 ) default charset utf8;
 
+create table user_question(
+  id int not null primary key auto_increment,
+  uid int not null,
+  qid int not null,
+  index(uid)
+) default charset utf8;
+
 create table tag_question(
   id int not null primary key auto_increment,
   tid int not null,
@@ -128,4 +137,13 @@ create table user_message_date(
   uid_1 int not null,
   uid_2 int not null,
   date timestamp not null
+) default charset utf8;
+
+create table attention_new_answer(
+  id int not null primary key auto_increment,
+  uid int not null,
+  qid int not null,
+  flushtime_of_new_answer timestamp,
+  index(uid),
+  index(qid)
 ) default charset utf8;

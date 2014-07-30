@@ -283,7 +283,6 @@ class Personal_Center extends REST_Controller
   
 
   /*关注问题有了新回答*/
-
   function attention_new_answer_get()
   {
       $status = $this->session->userdata('status');
@@ -308,5 +307,143 @@ class Personal_Center extends REST_Controller
         }
   }
 
-  
+  /*清空关注问题的回答提示*/
+  function attention_new_answer_flush_get($qid)
+  {
+        $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            $uid = $this->session->userdata('uid');
+            $this->db->where('uid',$uid);
+            $this->db->where('qid',$qid);
+            $data = array( 
+                           'flushtime_of_new_answer' => date('Y-m-d H:i:s',time())
+                         );
+            $this->db->update('user_question',$data);
+            $this->response($message,200);
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }  
+  }
+
+/*我的回答被赞了*/
+  function answer_good_get()
+  {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->answer_good($message))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
+              $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+
+  function answer_good_flush_get($qid)
+  {
+        $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message ='';
+            $uid = $this->session->userdata('uid');
+            $this->db->where('uid',$uid);
+            $this->db->where('qid',$qid);
+            $data = array( 
+                          'flushtime_of_answer_good' => date('Y-m-d H:i:s',time())
+                        );
+            $this->db->update('q2a_answer',$data);
+            $this->response($message,200);
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }  
+  }
+
+/*我的问题得到新回答*/
+  function myquestion_new_answer_get()
+  {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->myquestion_new_answer($message))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
+              $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
+
+  function myquestion_new_answer_flush_get($qid)
+  {
+        $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message ='';
+            $uid = $this->session->userdata('uid');
+            $this->db->where('uid',$uid);
+            $this->db->where('id',$qid);
+            $data = array( 
+                          'flushtime_of_myquestion_new_answer' => date('Y-m-d H:i:s',time())
+                        );
+            $this->db->update('q2a_question',$data);
+            $this->response($message,200);
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }  
+  }
+
+/*新通知数*/
+   function new_notification_get()
+   {
+       $message = '';
+       $num = 0;
+       $num_1 = 0;
+       $num_2 = 0;
+       $num_3 = 0;
+       $this->Personal_center_model->attention_new_answer($message,$num_1);
+       $this->Personal_center_model->answer_good($message,$num_2);
+       $this->Personal_center_model->myquestion_new_answer($message,$num_3);
+       $message = '';
+       $num = $num_1 + $num_2 + $num_3;
+       $message['num'] = $num;
+       $message['num_1'] = $num_1;
+       $message['num_2'] = $num_2;
+       $message['num_3'] = $num_3;
+       $this->response($message,200);
+   }
 }

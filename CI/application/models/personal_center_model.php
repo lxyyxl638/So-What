@@ -248,16 +248,11 @@
         return TRUE;
      }
 
-     function attention_new_answer(& $message)
+     function attention_new_answer(& $message,& $num_1 = 0)
      {
           $uid = $this->session->userdata('uid');
-          $this->db->select('flushtime_of_new_answer');
-          $this->db->where('uid',$uid);
-          $query = $this->db->get('user_profile');
-          $row = $query->row_array();
-          $timepoint = $row['flushtime_of_new_answer'];
-
-          $this->db->select('qid');
+    
+          $this->db->select('qid,flushtime_of_new_answer');
           $this->db->where('uid',$uid);
           $query = $this->db->get('user_question');
           $result = $query->result_array();
@@ -265,22 +260,89 @@
           foreach ($result as $key => $value)
           {
              $qid = $value['qid'];
+             $timepoint = $value['flushtime_of_new_answer'];
+             //$message['timepoint'] = $timepoint;
              $this->db->select('uid');
              $this->db->where('qid',$qid);
-             $this->db->where('date >',$timepoint);
+             $this->db->where('date >=',$timepoint);
+             //$this->db->where('uid !=',$uid);
              $this->db->order_by('date','desc');
              $query = $this->db->get('q2a_answer');
-             $value['uid'] = $query->result_array();
-             $message[$key] = $value;
+             if ($query->num_rows() > 0)
+             {
+                $num_1 += $query->num_rows();
+                $value= $query->result_array();
+                $value['qid'] = $qid;
+                unset($value['flushtime_of_new_answer']);
+                $message[$key] = $value;
+             }
           }
-          
-          $flushtime_of_new_answer = time();
-          $this->db->where('uid',$uid);
-          $data = array( 
-                         'flushtime_of_new_answer' = date('Y-m-d H:i:s',$flushtime_of_new_answer);
-                       )
-          $this->db->update('user_profile',$data);
+          return TRUE;
+     }
 
+     function answer_good(& $message, & $num_2 = 0)
+     {
+          $uid = $this->session->userdata('uid');
+          
+          $this->db->select('id,flushtime_of_answer_good');
+          $this->db->where('uid',$uid);
+          $query = $this->db->get('q2a_answer');
+          $result = $query->result_array();
+
+          foreach ($result as $key => $value)
+          {
+             $aid = $value['id'];
+             $timepoint = $value['flushtime_of_answer_good'];
+               
+             $this->db->select('uid');
+             $this->db->where('aid',$aid);
+             $this->db->where('vote','1');
+             $this->db->where('date >=',$timepoint);
+            // $this->db->where('uid !=',$uid);
+             $this->db->order_by('date','desc');
+             $query = $this->db->get('answer_vote');
+             if ($query->num_rows() > 0)
+              {  
+                 $num_2 += $query->num_rows();
+                 $this->db->select('qid');
+                 $this->db->where('id',$aid);
+                 $tmp = $this->db->get_where('q2a_answer');
+                 $row = $tmp->row_array();
+                 $message[$key] = $query->result_array();
+                 $message[$key]['qid'] = $row['qid'];
+              }
+              
+          }       
+          return TRUE;
+     }
+
+
+     function myquestion_new_answer(& $message, & $num_3 = 0)
+     {
+          $uid = $this->session->userdata('uid');
+          
+          $this->db->select('id,flushtime_of_myquestion_new_answer');
+          $this->db->where('uid',$uid);
+          $query = $this->db->get('q2a_question');
+          $result = $query->result_array();
+
+          foreach ($result as $key => $value)
+          {
+             $qid = $value['id'];
+             $timepoint = $value['flushtime_of_myquestion_new_answer'];
+             
+             $this->db->select('uid');
+             $this->db->where('date >=',$timepoint);
+             $this->db->where('qid',$qid);
+             $this->db->order_by('date','desc');
+             $query = $this->db->get_where('q2a_answer');
+             if ($query->num_rows() > 0)
+              {
+                 $num_3 += $query->num_rows();
+                 $message[$key] = $query->result_array();
+                 $message[$key]['qid'] = $qid;
+              }
+          }       
           return TRUE;
      }
 };

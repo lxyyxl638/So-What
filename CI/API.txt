@@ -72,10 +72,28 @@
        回复/对话：Personal_center/letter_send_post()
               POST:receiver(要email)，letter
 
+通知系统：
+      通知数量：
+             Personal_center/new_notification_get()
+         返回:num（总数）num_1（关注问题新回答数）num_2（我的回答被点赞数）num_3（我的问题新回答数）
 
+      关注问题新回答：
+             Personal_center/attention_new_answer_get()
+         返回：
+
+      回答被赞：
+             Personal_center/answer_good_get()
+         返回：
+      提问被回答：
+             Personal_center/myquestion_new_answer_get()
+         返回：
+         
 常用函数：
        得到realname：
                 public_function/myrealname_get()
                 返回当前 myrealname
                 public_function/uidrealname_get($uid)
                 返回uid对应的 uidrealname
+       得到uid：
+                public_function/myuid_get()
+                返回当前 myuid
