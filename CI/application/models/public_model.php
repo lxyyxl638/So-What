@@ -9,8 +9,8 @@
 
    function getid($email)
    {
-   	  $this->db->select('id');
-   	  $query = $this->db->get_where('user',array('email' => $email));
+   	$this->db->select('id');
+   	$query = $this->db->get_where('user',array('email' => $email));
       $row = $query-> row_array();
       return $row['id'];
    }
@@ -48,7 +48,45 @@
             {
                 return FALSE;
             }
-
      }
+
+   function large_photo_get($uid)
+    {   
+         if (!$this->get_photo($uid))
+           {
+               $location = "uploads/default_large.jpg";
+           }
+           else
+           {
+               $location = "uploads/'$uid'_large.jpg";
+           }
+         return base_url("$location");
+    } 
+
+   function middle_photo_get($uid)
+    {   
+         if (!$this->get_photo($uid))
+           {
+               $location = "uploads/default_middle.jpg";
+           }
+           else
+           {
+               $location = "uploads/'$uid'_middle.jpg";
+           }
+         return base_url("$location");
+    } 
+
+    function small_photo_get($uid)
+    {   
+         if (!$this->get_photo($uid))
+           {
+               $location = "uploads/default_small.jpg";
+           }
+           else
+           {
+               $location = "uploads/'$uid'_small.jpg";
+           }
+         return base_url("$location");
+    } 
 };
 ?>

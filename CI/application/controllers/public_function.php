@@ -33,6 +33,8 @@ class Public_function extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
            $message['myrealname'] = $this->session->userdata('realname');
+           $uid = $this->session->userdata('uid');
+           $message['location'] = $this->public_model->small_photo_get($uid);
            $this->response($message,200);
         }
         else
@@ -41,7 +43,6 @@ class Public_function extends REST_Controller
           $message['detail'] = "You didn't login!";
           $this->response($message,200);
         }
-        $this->response($message,200);
     }
  
   function myuid_get()
@@ -74,6 +75,7 @@ class Public_function extends REST_Controller
             }
             else
             {
+              $message['location'] = $this->public_model->small_photo_get($uid);
               $this->response($message,200);
             }
         }

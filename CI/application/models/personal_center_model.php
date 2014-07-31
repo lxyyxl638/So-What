@@ -30,7 +30,8 @@
                 $row[$key] = $this->input->post($key);
         	}
         }
-        
+        // $message = $row;
+        // return TRUE;
         $this->db->where('uid',$uid);
         if (!$this->db->update('user_profile',$row))
         {

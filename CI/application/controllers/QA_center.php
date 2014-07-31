@@ -26,6 +26,7 @@ class QA_center extends REST_Controller
         $this->load->library('encrypt');
         $this->load->library('session');
         $this->load->model('QA_center_model');
+        $this->load->model('public_model');
     }
 function initial()
     {
@@ -52,11 +53,12 @@ function initial()
            $result = $query->result_array();
            foreach ($result as $key => $value)
            {
+              $uid = $value['uid'];
+              $value['location'] = $this->public_model->middle_photo_get($uid);
               $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
               $value['follow'] = $this->QA_center_model->get_follow($value['id']);
               $message[$key] = $value;
            }
-           //$message['state'] = "success";
            $this->response($message,200);
         }
         else
@@ -81,11 +83,13 @@ function initial()
            $result = $query->result_array();
            foreach ($result as $key => $value)
            {
+              $uid = $value['uid'];
+              $value['location'] = $this->public_model->middle_photo_get($uid);
               $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
               $value['follow'] = $this->QA_center_model->get_follow($value['id']);
               $message[$key] = $value;
            }
-           //$message['state'] = 'success';
+           
            $this->response($message,200);
         }
         else
@@ -111,11 +115,12 @@ function initial()
         $result = $query->result_array();
            foreach ($result as $key => $value)
            {
+              $uid = $value['uid'];
+              $value['location'] = $this->public_model->middle_photo_get($uid);
               $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
               $value['follow'] = $this->QA_center_model->get_follow($value['id']);
               $message[$key] = $value;
            }
-        //$message['state'] = "success";
         $this->response($message,200);
      }
      else
@@ -190,7 +195,12 @@ function initial()
            $this->db->order_by("good","desc");
            $this->db->limit(10,$offset);
            $query = $this->db->get_where('q2a_answer',array('qid' => $qid));
-           $message = $query->result_array();
+           $result = $query->result_array();
+           foreach ($result as $key => $value)
+           {
+              $value['mygood'] = $this->QA_center_model->get_mygood($value['id']);
+              $message[$key] = $value;
+           }
            $message['state'] = 'success';
            $this->response($message,200);
         }
@@ -200,7 +210,7 @@ function initial()
            $message['detail'] = "You didn't login!";
            $this->response($message,200);
         }
-        
+    
     }
 
 /*添加回答*/
@@ -358,6 +368,7 @@ function initial()
            }
            else
            {
+              $message['mygood'] = $this->QA_center_model->get_mygood($aid);
               $this->response($message,200);
            }
         }
