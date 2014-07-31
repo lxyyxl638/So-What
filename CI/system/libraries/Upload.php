@@ -1024,14 +1024,13 @@ class CI_Upload {
 	{
 		// We'll need this to validate the MIME info string (e.g. text/plain; charset=us-ascii)
 		$regexp = '/^([a-z\-]+\/[a-z0-9\-\.\+]+)(;\s.+)?$/';
-
 		/* Fileinfo extension - most reliable method
 		 *
 		 * Unfortunately, prior to PHP 5.3 - it's only available as a PECL extension and the
 		 * more convenient FILEINFO_MIME_TYPE flag doesn't exist.
 		 */
 		if (function_exists('finfo_file'))
-		{
+		{			  
 			$finfo = finfo_open(FILEINFO_MIME);
 			if (is_resource($finfo)) // It is possible that a FALSE value is returned, if there is no magic MIME database file found on the system
 			{
@@ -1049,7 +1048,7 @@ class CI_Upload {
 				}
 			}
 		}
-
+    
 		/* This is an ugly hack, but UNIX-type systems provide a "native" way to detect the file type,
 		 * which is still more secure than depending on the value of $_FILES[$field]['type'], and as it
 		 * was reported in issue #750 (https://github.com/EllisLab/CodeIgniter/issues/750) - it's better
@@ -1113,7 +1112,6 @@ class CI_Upload {
 				}
 			}
 		}
-
 		// Fall back to the deprecated mime_content_type(), if available (still better than $_FILES[$field]['type'])
 		if (function_exists('mime_content_type'))
 		{
@@ -1125,6 +1123,7 @@ class CI_Upload {
 		}
 
 		$this->file_type = $file['type'];
+		
 	}
 
 	// --------------------------------------------------------------------

@@ -1,0 +1,10 @@
+<div ng-controller="basicCtrl">
+	<form novalidate class="infoForm">
+		性别: <input type="radio" ng-model="basic.gender" value="0" />男生
+			 <input type="radio" ng-model="basic.gender" value="1" />女生<br>
+		职业: <input type="radio" ng-model="basic.job" value="0" />学生
+			 <input type="radio" ng-model="basic.job" value="1" />在职<br>
+		<input type="text" ng-model="basic.description" placeholder="一句话描述">
+		<button class="infoButton" ng-click="basicSubmit(basic)">下一步</button>
+	</form>
+</div>

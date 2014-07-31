@@ -12,7 +12,8 @@
         登陆：login/userlogin_post
           POST: email,password
 
-      
+        登出：login/user_logout_get()
+          返回：success
  
 界面二：主页
         问题广场：QA_center/question_date_get
@@ -44,11 +45,13 @@
                   QA_center/bad_get($aid)
                   qid uid id content good bad date
 
-
        关注某个问题
                   QA_center/question_attention_get($qid)
                   (点一下是关注，再点为取消)
-
+       
+       得到某个特定回答：
+                  QA_center/get_answer($aid)
+             返回：回答的相关信息
 个人中心 
        我的提问：Personal_center/my_question_get($limit,$offset)
            返回：跟问题列表一样
@@ -79,8 +82,8 @@
       通知数量：
              Personal_center/new_notification_get()
          返回:num（总数）num_1（关注问题新回答数）num_2（我的回答被点赞数）num_3（我的问题新回答数）
-
-      关注问题新回答：
+       
+      关注问题有新回答：
              Personal_center/attention_new_answer_get()
          返回：
 
@@ -90,6 +93,7 @@
       提问被回答：
              Personal_center/myquestion_new_answer_get()
          返回：
+      上面三个返回比较复杂，再说
          
 常用函数：
        得到realname：
@@ -100,3 +104,12 @@
        得到uid：
                 public_function/myuid_get()
                 返回当前 myuid
+
+头像系统：
+      得到大头像：
+                public_function/large_photo_get($uid)
+      得到中头像：
+                public_function/middle_photo_get($uid)
+      得到小头像：
+                public_function/small_photo_get($uid)
+           返回:location (为头像所在url,如没有上传头像则为默认头像)

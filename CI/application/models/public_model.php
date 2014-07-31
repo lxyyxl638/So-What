@@ -32,5 +32,23 @@
       $message['uidrealname'] = $row['realname'];
       return TRUE;
    }
+
+   /*判断是否有照片*/
+     function get_photo($uid)
+     {
+         $this->db->select('photo');
+         $this->db->where('uid',$uid);
+         $query = $this->db->get('user_profile');
+         $row = $query-> row_array();
+         if ($row['photo'] == 1) 
+            {
+                return TRUE;
+            }
+         else
+            {
+                return FALSE;
+            }
+
+     }
 };
 ?>

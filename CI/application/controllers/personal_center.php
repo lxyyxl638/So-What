@@ -26,25 +26,26 @@ class Personal_Center extends REST_Controller
         $this->load->library('encrypt');
         $this->load->library('session');
         $this->load->model('Personal_center_model');
+        $this->load->helper('url');
     }
 
 /*个人信息完善*/
-  function profile_get()
+  function large_photo_get($uid)
   {
      $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
-        {
-            $message = '';
-            if (!$this->Personal_center_model->profile($message))
-            {
-              $message['state'] = "fail";
-              $message['detail'] = "fail change profile";
-              $this->response($message,200);
-            }
-            else
-            {
-               $this->response($message,200);
-            }
+        { 
+           $uid = $this->session->userdata('uid');
+           if (!$this->Personal_center_model->get_photo($uid))
+           {
+               $location = "uploads/default_large.jpg";
+           }
+           else
+           {
+               $location = "uploads/'$uid'_large.jpg";
+           }
+           $message['location'] = base_url("$location");
+           $this->response($message,200);
         }
         else
         {

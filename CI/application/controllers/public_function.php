@@ -83,8 +83,82 @@ class Public_function extends REST_Controller
           $message['detail'] = "You didn't login!";
           $this->response($message,200);
         }
-   	
     }
+
+/*得到100*100的大头像*/
+    function large_photo_get($uid)
+    {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        { 
+           $uid = $this->session->userdata('uid');
+           if (!$this->public_model->get_photo($uid))
+           {
+               $location = "uploads/default_large.jpg";
+           }
+           else
+           {
+               $location = "uploads/'$uid'_large.jpg";
+           }
+           $message['location'] = base_url("$location");
+           $this->response($message,200);
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+   }
+/*得到38*38的大头像*/
+   function middle_photo_get($uid)
+    {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        { 
+           $uid = $this->session->userdata('uid');
+           if (!$this->public_model->get_photo($uid))
+           {
+               $location = "uploads/default_large.jpg";
+           }
+           else
+           {
+               $location = "uploads/'$uid'_large.jpg";
+           }
+           $message['location'] = base_url("$location");
+           $this->response($message,200);
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+   }
+/*得到27*27的大头像*/
+   function small_photo_get($uid)
+    {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        { 
+           $uid = $this->session->userdata('uid');
+           if (!$this->public_model->get_photo($uid))
+           {
+               $location = "uploads/default_large.jpg";
+           }
+           else
+           {
+               $location = "uploads/'$uid'_large.jpg";
+           }
+           $message['location'] = base_url("$location");
+           $this->response($message,200);
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+   }
     
- 
 }

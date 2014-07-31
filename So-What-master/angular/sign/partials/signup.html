@@ -1,0 +1,25 @@
+<div class = "loginBoxWrapper">
+	<div ng-controller = "signupCtrl" class="loginBox">
+		<div class="loginPrefix">
+			<span class="loginTitle"><span class="fontmodify">注册</span></span>
+			<a class="loginSwitch" href="#signin"><span class="fontmodify">登录</span>
+			<span class="glyphicon glyphicon-circle-arrow-right"></span>
+			</a>
+		</div>
+		<form novalidate name="signupForm" class="signupForm">
+			<div class="nameWrapper">
+				<input class="inputBoxName" type="text"	placeholder="姓"	ng-model="user.lastname"	id="lastName" name="uLastName"	required/>
+				<input class="inputBoxName" type="text"	placeholder="名"	ng-model="user.firstname"	id="firstName" name="uFirstName"	required/>
+			</div>
+			<div class="usernameWrapper">
+				<input class="inputBox" type="email"	placeholder="邮箱"	ng-model="user.email"	name="uEmail"	required/>
+			</div>
+			<div class="passwordWrapper">
+				<input class="inputBox" type="password"	placeholder="密码"	ng-model="user.password"	name="uPSW"	required/>
+			</div>
+			<div class="buttonWrapper">
+				<button class="signbutton" ng-click="register(user)">注册</button>
+			</div>
+		</form>
+	</div>
+</div>

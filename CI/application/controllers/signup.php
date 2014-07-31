@@ -74,6 +74,7 @@ class Signup extends REST_Controller
              $temp = array(
                              'id' => 0,
                              'uid' => $row['id'], 
+                             'photo' => 0,
                              'realname' => $realname,
                              'lastask' => 0
                           );

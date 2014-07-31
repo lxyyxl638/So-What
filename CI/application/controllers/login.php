@@ -123,4 +123,11 @@ class Login extends REST_Controller
               }
             
     }
+
+    function user_logout_get()
+    {
+       $this->session->sess_destroy();
+       $message['state'] = "success";
+       $this->response($message,200);
+    }
 }

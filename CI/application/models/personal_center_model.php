@@ -14,7 +14,7 @@
      {
      	$uid = $this->session->userdata('uid');
      	$email = $this->session->userdata('email');
-        $query = $this->db->get_where('uid',$uid);
+        $query = $this->db->get_where('user_profile',array('uid' => $uid));
         $row = $query->row_array();
         unset($row['id']);
         unset($row['uid']);
@@ -37,45 +37,60 @@
         	return FALSE;
         }
         $config['upload_path'] = 'uploads';
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['file_name'] = $email;
+        $config['allowed_types'] = 'jpg|png';
+        $config['file_name'] = "'$uid'.jpg";
         $config['overwrite'] = TRUE;
         $this->load->library('upload',$config);
-        
-        if (!$this->upload->do_upload())
+        $this->upload->initialize($config);
+        $supery = '';
+        $userfile = 'userfile';
+        if (!$this->upload->do_upload($userfile))
          {
+            
          }
          else
          {
+            $data = array(
+                            'photo' => 1
+                         );
+            $this->db->where('uid',$uid);
+            $this->db->update('user_profile',$data);
          	$data = $this->upload->data();
+            $config = '';
          	$config['image_library'] = 'gd2';
          	$config['source_image'] = $data['full_path'];
-            $config['new_image'] = $data['file_path'].$email."_large".$data['file_ext'];
-         	$config['create_thumb'] = TRUE;
+            $config['new_image'] = $data['file_path'].$uid."_large".$data['file_ext'];
+         	//$config['create_thumb'] = TRUE;
             $config['maintain_ratio'] = TRUE;
             $config['width'] = 100;
             $config['height'] = 100;
             $this->load->library('image_lib',$config);
             $this->image_lib->resize();
-
-            $config['new_image'] = $data['file_path'].$email."_middle".$data['file_ext'];
+            
+            // $message = $data;
+            // return TRUE;
+            $config['new_image'] = $data['file_path'].$uid."_middle".$data['file_ext'];
             $config['width'] = 38;
             $config['height'] = 38;
-            $this->load->library('image_lib',$config);
+            // $message = $config;
+            // return TRUE;
+            $this->image_lib->initialize($config);
             $this->image_lib->resize();
 
-            $config['new_image'] = $data['file_path'].$email."_small".$data['file_ext'];
+            $config['new_image'] = $data['file_path'].$uid."_small".$data['file_ext'];
             $config['width'] = 27;
             $config['height'] = 27;
             $this->load->library('image_lib',$config);
+            $this->image_lib->initialize($config);
             $this->image_lib->resize();
          }
 
-         $query = $this->db->get_where('uid',$uid);
+         $query = $this->db->get_where('user_profile',array('uid' => $uid));
          $message = $query->row_array();
         return TRUE;
      }
-
+    
+    
      /*我的提问*/
      function my_question(& $message,$limit = 10,$offset = 0)
      {
