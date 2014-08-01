@@ -37,7 +37,7 @@
              POST:content
        查看对应问题回答
                   QA_center/view_answer_get($qid,$offset)
-                  qid uid id realname content good bad date
+                  qid uid id realname content good bad date mygood
        支持某个回答
                   QA_center/good_get($aid)
                   qid uid id content good bad date
@@ -51,7 +51,7 @@
        
        得到某个特定回答：
                   QA_center/get_answer($aid)
-             返回：回答的相关信息
+             返回：qid uid id realname content good bad date mygood
 个人中心 
        我的提问：Personal_center/my_question_get($limit,$offset)
            返回：跟问题列表一样

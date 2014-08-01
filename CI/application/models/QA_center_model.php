@@ -192,13 +192,13 @@ class QA_center_model extends CI_Model
 		}
 	}
 	
-	function question_attention($qid,$follow)
+	function question_attention($qid,& $follow)
 	{
 		$uid = $this->session->userdata('uid');
 		$query = $this->db->get_where('user_question',array('uid' => $uid,'qid' => $qid));
 		if ($query->num_rows() > 0)
 		{
-		   if ((!$this->db->delete('user_question',array('uid' => $uid,'qid' => $qid)))||(!$this->db->delete('attention_new_answer',array('uid'=>$uid,'qid'=>$qid))))
+		   if (!$this->db->delete('user_question',array('uid' => $uid,'qid' => $qid)))
 		   {
 		   	  $message['detail'] = "delete fails";
 		   	  return FALSE;
@@ -216,7 +216,7 @@ class QA_center_model extends CI_Model
 				            'qid' => $qid
 				            //'date' => date('Y-m-d H:i:s',time())
 				         );
-			if ((!$this->db->insert('user_question',$data)) || (!$this->db->insert('attention_new_answer',$data)))
+			if (!$this->db->insert('user_question',$data))
 			{
 				$message['detail'] = "insert user_question fails";
 				return FALSE;
@@ -260,7 +260,24 @@ class QA_center_model extends CI_Model
         	return '0';
         }
 	}
-
+    
+    function get_mygood($aid)
+    {
+    	$uid = $this->session->userdata('uid');
+    	$this->db->select('vote');
+    	$this->db->where('uid',$uid);
+    	$this->db->where('aid',$aid);
+    	$query = $this->db->get('answer_vote');
+    	if ($query->num_rows()>0)
+    	{
+    		$row = $query->row_array();
+    		return $row['vote'];
+    	}
+    	else
+    	{
+    		return 0;
+    	}
+    }
 	function get_answer(& $message,$aid)
 	{
 		$this->db->where('id',$aid);

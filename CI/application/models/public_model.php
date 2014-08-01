@@ -58,7 +58,7 @@
            }
            else
            {
-               $location = "uploads/'$uid'_large.jpg";
+               $location = "uploads/".$uid."_large.jpg";
            }
          return base_url("$location");
     } 
@@ -71,7 +71,7 @@
            }
            else
            {
-               $location = "uploads/'$uid'_middle.jpg";
+               $location = "uploads/".$uid."_middle.jpg";
            }
          return base_url("$location");
     } 
@@ -84,7 +84,7 @@
            }
            else
            {
-               $location = "uploads/'$uid'_small.jpg";
+               $location = "uploads/".$uid."_small.jpg";
            }
          return base_url("$location");
     } 

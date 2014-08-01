@@ -47,7 +47,8 @@
         $userfile = 'userfile';
         if (!$this->upload->do_upload($userfile))
          {
-            
+            $message['detail'] = $this->upload->display_errors()
+            return FALSE;
          }
          else
          {
