@@ -182,11 +182,39 @@ div{
 	display: none;
 }
 
+.answer-dialog{
+	position:relative;
+	margin-top: 50px;
+	margin-left: 30px;
+	border-radius: 8px;
+	border:1px solid #888;
+	box-shadow: 0 0 80px 0 rgba(0,0,0,.4);
+	background: #fff;
+	text-align: left;
+	outline: 0;
+	display: block;
+	width: 550px;
+}
+
+.img-dialog{
+	position:relative;
+	margin-top: 50px;
+	margin-left: 30px;
+	border-radius: 8px;
+	border:1px solid #888;
+	box-shadow: 0 0 80px 0 rgba(0,0,0,.4);
+	background: #fff;
+	text-align: left;
+	outline: 0;
+	display: block;
+	width: 890px;
+}
+
 .model-dialog-title{
 	position: relative;
 	background-color: #1575d5;
 	padding: 10px 15px;
-	cursor: move;
+	cursor: auto;
 	border-radius: 6px 6px 0 0;
 	border: 1px solid #0D6EB8;
 	box-shadow: 0 1px 0 rgba(255,255,255,.1) inset,0 1px 1px rgba(0,0,0,.2);
@@ -322,6 +350,14 @@ div{
 	outline: 0;
 	background: #fff;
 	cursor: text;
+}
+
+#logout{
+	cursor: pointer;
+}
+
+#answer-editor-field{
+	height: auto;
 }
 
 .question-button{
@@ -550,4 +586,250 @@ div{
 	display:inline-block;
 	text-decoration:none;
 	cursor:pointer;
+}
+
+.sw-like{
+	text-decoration: none;
+}
+
+.likeOrNot{
+	display: inline-block;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.sw-result{
+	float: right;
+}
+
+.sw-answer-num{
+	padding-left: 20px;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+	color:#999;
+}
+
+.sw-question-title{
+	margin: 0 0 5px;
+	display: block;
+}
+
+.sw-question-detail{
+	display: block;
+}
+
+.sw-answer-total{
+	position: relative;
+	padding: 10px 0;
+	line-height: 24px;
+	border-top: 1px solid #EEE;
+}
+
+.sw-profile-header{
+	border:1px solid #ddd;
+	border-radius: 4px;
+	box-shadow: 0 1px 0 #f2f4f5;
+	color:#666;
+	display: block;
+	height: auto;
+}
+
+.sw-profile-header-main{
+	padding: 12px 18px;
+	display: block;
+}
+
+.profile-top{
+	font-size: 1.4em;
+	margin-bottom: 10px;
+	display: block;
+}
+
+.profile-title{
+	word-wrap:normal;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow:ellipsis;
+}
+
+.name{
+	font-weight: 700;
+	color: #222;
+}
+
+.profile-avatar{
+	float: left;
+	position: relative;
+	box-shadow: 0 0 5px rgba(0,0,0,.3) inset;
+	border-radius: 4px;
+	width: 100px;
+	height: 100px;
+}
+
+.profile-img{
+	width: 100px;
+	height: 100px;
+	border:0 none;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+.profile-img-change-button{
+	text-indent: 0;
+	height: 25px;
+	left: 0;
+	padding: 0;
+	width: 100%;
+	bottom: -25px;
+	position: absolute;
+	font-size: 0.8em;
+	background: #0d77e4;
+	background-color: #0e78e7;
+	line-height: 25px;
+	text-align: center;
+	text-shadow: 0 1px 1px rgba(0,0,0,.12);
+	cursor: pointer;
+	border: 1px solid #045BB2;
+	border-radius: 4px;
+	box-shadow: 0 1px 2px rgba(0,0,0,.05),inset 0 1px 1px rgba(255,255,255,.15);
+	outline: 0;
+	color: #fff;
+}
+
+.sw-profile-basic-info{
+	margin-left: 115px;
+}
+
+.items{
+	position: relative;
+	min-height: 22px;
+	color:#666;
+}
+
+.item-group{
+	margin-top: 6px;
+}
+
+.sw-ask-wrap{
+	margin-top: 25px;
+	border:1px solid #ddd;
+	border-radius: 4px;
+	box-shadow: 0 1px 0 #f2f4f5;
+	margin-bottom: 20px;
+}
+
+.sw-ask-head{
+	overflow: hidden;
+	border-bottom: 1px solid #eee;
+}
+
+.sw-ask-title{
+	overflow: hidden;
+	text-decoration: none;
+	padding: 7px 14px;
+}
+
+.sw-ask-name{
+	padding-left: 15px;
+	float: left;
+	font-size: 14px;
+	font-weight: 700;
+	color: #666;
+}
+
+.sw-ask-more{
+	padding-right: 15px;
+	float: right;
+	font-size: 12px;
+	font-weight: 700;
+	color: #666;
+}
+
+.sw-ask-list{
+	padding: 0 14px;
+	margin-bottom: 15px;
+}
+
+.sw-ask-item{
+	position:relative;
+	padding: 12px 0;
+}
+
+.sw-view-count{
+	background-color: #ddd;
+	color:#666;
+	float:left;
+	text-decoration: none;
+	text-align: center;
+	height: 38px;
+	width: 46px;
+	line-height: 20px;
+	font-weight: 700;
+	border-radius: 4px;
+	background: #eff6fa;
+	font-size: 13px;
+	padding: 2px;
+}
+
+.sw-view-num{
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 1;
+	padding: 2px 0 4px;
+}
+
+.sw-view-type{
+	line-height: 1;
+	font-weight: 400;
+	font-size: 12px;	
+}
+
+.sw-msg-title{
+	margin:0 0 10px;
+	display: block;
+}
+
+.sw-msg-wrap{
+	border-top: solid 1px #ccc;
+}
+
+.sw-msg-item{
+	padding: 12px 0;
+	min-height: 50px;
+	display: block;
+	border-bottom: solid 1px #ccc;
+}
+
+.sw-msg-time{
+	font-size: 12px;
+	display: inline-block;
+	color: #999;
+	float: left;
+}
+
+#msg-feed-main{
+	min-height: 30px;
+}
+
+.sw-msg-total{
+	font-size: 12px;
+	display: inline-block;
+	color: #999;
+	float: right;
+}
+
+.tempuid{
+	display: none;
+}
+
+.sw-talk-title{
+	font-size: 14px;
+	margin: 0 0 10px;
+	display: block;
+}
+
+.sw-talk-other{
+	color: #999;
+	font-weight: 400;
 }

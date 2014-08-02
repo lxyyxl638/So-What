@@ -26,7 +26,7 @@ class Public_function extends REST_Controller
         $this->load->library('session');
         $this->load->model('public_model');
     }
-
+   
 	function myrealname_get()
     {
     	$status = $this->session->userdata('status');
@@ -92,17 +92,8 @@ class Public_function extends REST_Controller
     {
       $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
-        { 
-           $uid = $this->session->userdata('uid');
-           if (!$this->public_model->get_photo($uid))
-           {
-               $location = "uploads/default_large.jpg";
-           }
-           else
-           {
-               $location = "uploads/'$uid'_large.jpg";
-           }
-           $message['location'] = base_url("$location");
+        {
+           $message['location'] = $this->public_model->large_photo_get($uid);
            $this->response($message,200);
         }
         else
@@ -118,16 +109,7 @@ class Public_function extends REST_Controller
       $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         { 
-           $uid = $this->session->userdata('uid');
-           if (!$this->public_model->get_photo($uid))
-           {
-               $location = "uploads/default_large.jpg";
-           }
-           else
-           {
-               $location = "uploads/'$uid'_large.jpg";
-           }
-           $message['location'] = base_url("$location");
+           $message['location'] = $this->public_model->middle_photo_get($uid);
            $this->response($message,200);
         }
         else
@@ -143,16 +125,7 @@ class Public_function extends REST_Controller
       $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         { 
-           $uid = $this->session->userdata('uid');
-           if (!$this->public_model->get_photo($uid))
-           {
-               $location = "uploads/default_large.jpg";
-           }
-           else
-           {
-               $location = "uploads/'$uid'_large.jpg";
-           }
-           $message['location'] = base_url("$location");
+           $message['location'] = $this->public_model->small_photo_get($uid);
            $this->response($message,200);
         }
         else

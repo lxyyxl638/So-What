@@ -96,8 +96,8 @@
 		'letter_send' => array
 		          (
 		          	array(
-		          		'field' => 'receiver',
-		          		'label' => 'receiver',
+		          		'field' => 'uid',
+		          		'label' => 'uid',
 		          		'rules' => 'required'
 		          		),
 		          	array(

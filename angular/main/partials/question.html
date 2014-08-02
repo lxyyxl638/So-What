@@ -1,1 +1,67 @@
-TBD: detail view for qustion {{qid}}
+<div class="sw-main-content" ng-controller="questionCtrl">
+	<div class="sw-main-content">
+		<div class="sw-main-content-inner">
+			<div class="sw-question-title">
+				<h3>{{q.title}}</h3>
+			</div>
+			<div class="sw-question-detail">
+				<h4>{{q.content}}</h4>
+			</div>
+			<div class="sw-answer-total">
+				<h4>{{q.answer_num}}个回答</h4>
+			</div>
+			<div ng-repeat="a in answers" class="sw-main-feed-item">
+				<div class="avatar">
+					<a href="#/people/{{a.uid}}"><img ng-src={{a.location}} class="sw-avatar-img"></a>
+				</div>
+				<div class="feed-main">
+					<div class="feed-main-title">
+						<a href="#/people/{{a.uid}}" class="sw-link">{{a.realname}}</a>
+						<span class="sw-time">{{a.date}}</span>
+					</div>
+					<div class="feed-main-content">
+						<div class="content-body">
+							<p>{{a.content}}</p>
+						</div>
+					</div>
+					<div class="sw-meta-panel">
+						<span class="sw-like" ng-click="like(q.id,a.id,$index)"><strong ng-show="a.like" class="likeOrNot">点赞</strong><strong ng-show="a.cancellike" class="likeOrNot">取消赞</strong></span>
+						<span class="sw-like" ng-click="dislike(q.id,a.id,$index)"><strong ng-show="a.dislike" class="likeOrNot">点踩</strong><strong ng-show="a.canceldislike" class="likeOrNot">取消踩</strong></span>
+						<span class="sw-result">
+						<span class="sw-like">共获得了{{a.good}}次赞</span>
+						<span class="sw-like"> {{a.bad}}次踩</span>
+						</span>
+					</div>
+				</div>
+			</div>
+				<div class="answer-dialog" id="answer-dialog" tabindex="0" role="dialog" ng-controller="answerCtrl" >
+				    <div class="model-dialog-title">
+				      <span class="model-dialog-title-text">回答</span>
+				    </div>
+				    <div class="model-dialog-content">
+				      <div class="add-question-page">
+				        <form class="add-question-form">
+				          <div class="question-form-middle">
+				            <div class="question-form-middle-detail">
+				              <div class="question-form-middle-detail-wrapper">
+				                <div class="question-form-middle-detail-outer">
+				                  <div class="sw-editable-editor-field-wrap">
+				                    <textarea class="sw-editable-editor-field" id="answer-editor-field" ng-model="a.content" contenteditable="true"></textarea>
+				                  </div>
+				                </div>
+				              </div>
+				            </div>
+				          </div>
+				          <div class="question-form-cmd">
+				            <button class="question-button" ng-click="answerquestion(a)">提交回答</button>
+				          </div>
+				        </form>
+				      </div>
+				    </div>
+				  </div>
+		</div>
+
+		<div class="sw-main-sidebar">
+		</div>
+	</div>
+</div>

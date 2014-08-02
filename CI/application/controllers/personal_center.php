@@ -30,21 +30,46 @@ class Personal_Center extends REST_Controller
         $this->load->helper('url');
     }
 
+/*获取个人信息*/
+  function get_profile_get($uid)
+  {
+     $status = $this->session->userdata('status');
+     if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->Personal_center_model->profile_get($message,$uid))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
+               $message['state'] = "success";
+               $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "You didn't login!";
+          $this->response($message,200);
+        }
+  }
 /*个人信息完善*/
-	function profile_post()
+	function modify_profile_post()
     {
         $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->profile($message))
+            if (!$this->Personal_center_model->modify_profile($message))
             {
             	$message['state'] = "fail";
-            	$message['detail'] = "fail change profile";
             	$this->response($message,200);
             }
             else
             {
+               $message['state'] = "success";
                $this->response($message,200);
             }
         }
@@ -147,6 +172,7 @@ class Personal_Center extends REST_Controller
             }
             else
             {
+              $message['state'] = "success";
               $this->response($message,200);
             }
         }
@@ -209,13 +235,13 @@ class Personal_Center extends REST_Controller
   }
 
   /*聊天历史*/
-  function letter_talk_post()
+  function letter_talk_get($uid)
   {
      $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->letter_talk($message))
+            if (!$this->Personal_center_model->letter_talk($message,$uid))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -240,13 +266,14 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->set_look($message))
+            if (!$this->Personal_center_model->letter_set_look($message))
             {
               $message['state'] = "fail";
               $this->response($message,200);
             }
             else
             {
+              $message['state'] = "success";
               $this->response($message,200);
             }
         }

@@ -1,0 +1,25 @@
+<div class="sw-main-content" ng-controller="messageCtrl">
+	<div class="sw-main-content">
+		<div class="sw-main-content-inner">
+			<div class="sw-msg-title">
+				<h5>我的消息</h5>
+			</div>	
+			<div class="sw-msg-wrap">
+				<div ng-repeat="msg in myMessage" class="sw-msg-item">
+					<div class="avatar">
+						<a href="#/people/{{msg.uid}}"><img ng-src={{msg.location}} class="sw-avatar-img"></a>
+					</div>
+					<div class="feed-main">
+						<div class="feed-main-title">
+							<a href="#/people/{{msg.uid}}" class="sw-link">{{self.realname}}</a>
+						</div>
+						<div class="feed-main-content" id="msg-feed-main">
+							<span class="sw-msg-time">{{msg.date}}</span>
+							<span class="sw-msg-total"><a href="#/talk/{{msg.uid}}">共{{msg.msg_total}}条信息,其中{{msg.msg_unread}}条未读</a></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

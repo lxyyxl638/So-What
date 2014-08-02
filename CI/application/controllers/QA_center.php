@@ -46,18 +46,14 @@ function initial()
 
         if (isset($status) && $status === 'OK')
         {
-           $time_point = date('Y-m-d H:i:s',time() - 30 * 60 * 60 * 24);
-           $this->db->where('date >',$time_point);
-           $this->db->order_by("date","desc");
-           $query = $this->db->get('q2a_question');
-           $result = $query->result_array();
-           foreach ($result as $key => $value)
+           if (!$this->QA_center_model->question_date_get($message))
            {
-              $uid = $value['uid'];
-              $value['location'] = $this->public_model->middle_photo_get($uid);
-              $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
-              $value['follow'] = $this->QA_center_model->get_follow($value['id']);
-              $message[$key] = $value;
+               $message['state'] = "fail";
+               $this->response($message,200);
+           }
+           else
+           {
+               $this->response($message,200);
            }
            $this->response($message,200);
         }
@@ -69,28 +65,22 @@ function initial()
         }
     }
 
-/*显示用户关注的话题*/
+/*显示用户关注的话题*/ 
   function question_focus_get()  
     {
         $status = $this->session->userdata('status');
 
         if (isset($status) && $status === 'OK')
         {
-           $message = '';
-           $uid = $this->session->userdata('uid');
-           $order = "select * from q2a_question where id in (select distinct qid from tag_question where tid in (select tid from user_tag where uid = 5)) order by date desc";
-           $query = $this->db->query($order);
-           $result = $query->result_array();
-           foreach ($result as $key => $value)
+           if (!$this->QA_center_model->question_focus_get($message))
            {
-              $uid = $value['uid'];
-              $value['location'] = $this->public_model->middle_photo_get($uid);
-              $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
-              $value['follow'] = $this->QA_center_model->get_follow($value['id']);
-              $message[$key] = $value;
+               $message['state'] = "fail";
+               $this->response($message,200);
            }
-           
-           $this->response($message,200);
+           else
+           {
+               $this->response($message,200);
+           }
         }
         else
         {
@@ -108,20 +98,15 @@ function initial()
 
      if (isset($status) && $status === 'OK')
      {
-        $time_point = date('Y-m-d H:i:s',time() - 60*60*24);
-        $this->db->where('date >',$time_point);
-        $this->db->order_by("view_num","desc");
-        $query = $this->db->get('q2a_question');
-        $result = $query->result_array();
-           foreach ($result as $key => $value)
+        if (!$this->QA_center_model->question_day_get($message))
            {
-              $uid = $value['uid'];
-              $value['location'] = $this->public_model->middle_photo_get($uid);
-              $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
-              $value['follow'] = $this->QA_center_model->get_follow($value['id']);
-              $message[$key] = $value;
+               $message['state'] = "fail";
+               $this->response($message,200);
            }
-        $this->response($message,200);
+        else
+           {
+               $this->response($message,200);
+           }
      }
      else
      {
@@ -174,6 +159,7 @@ function initial()
 
            $query = $this->db->get_where('q2a_question',array('id' => $qid));
            $message = $query->row_array();
+           $message['location'] = $this->public_model->middle_photo_get($message['uid']);
            $message['state'] = "success";
            $this->response($message,200);
         }
@@ -189,7 +175,7 @@ function initial()
   function view_answer_get($qid,$offset = 0)  
     {
         $status = $this->session->userdata('status');
-
+        $message = '';
         if (isset($status) && $status === 'OK')
         {
            $this->db->order_by("good","desc");
@@ -199,9 +185,9 @@ function initial()
            foreach ($result as $key => $value)
            {
               $value['mygood'] = $this->QA_center_model->get_mygood($value['id']);
+              $value['location'] = $this->public_model->middle_photo_get($value['uid']);
               $message[$key] = $value;
            }
-           $message['state'] = 'success';
            $this->response($message,200);
         }
         else
@@ -265,7 +251,8 @@ function initial()
              $query = $this->db->get_where('q2a_answer',array('id' => $aid));
              if ($query->num_rows() > 0)
              { 
-                $message = $query-> row_array();
+                $message = $query->row_array();
+                $message['mygood'] = $this->QA_center_model->get_mygood($aid);
                 $message['state'] = "success";
                 $this->response($message,200);
              }
@@ -303,6 +290,7 @@ function initial()
              if ($query->num_rows() > 0)
              { 
                 $message = $query-> row_array();
+                $message['mygood'] = $this->QA_center_model->get_mygood($aid);
                 $message['state'] = "success";
                 $this->response($message,200);
              }

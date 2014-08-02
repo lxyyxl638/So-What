@@ -1,0 +1,61 @@
+<div class="sw-main-content" ng-controller="talkCtrl">
+	<div class="sw-main-content">
+		<div class="sw-main-content-inner">
+			<div class="sw-talk-title">
+				<span class="sw-talk-other">发消息给{{other.realname}}:</span>
+			</div>
+			<div class="answer-dialog" id="answer-dialog" tabindex="0" role="dialog" ng-controller="talkCtrl" >
+				<div class="model-dialog-content">
+				    <div class="add-question-page">
+				        <form class="add-question-form">
+					       	<div class="question-form-middle">
+					            <div class="question-form-middle-detail">
+						            <div class="question-form-middle-detail-wrapper">
+						 	            <div class="question-form-middle-detail-outer">
+						    	            <div class="sw-editable-editor-field-wrap">
+						                    	<textarea class="sw-editable-editor-field" id="answer-editor-field" ng-model="m.letter" contenteditable="true"></textarea>
+						                  	</div>
+						                </div>
+						            </div>
+						        </div>
+						    </div>
+						   	<div class="question-form-cmd">
+						        <button class="question-button" ng-click="postMsg(m,uid)">发送</button>
+						    </div>
+					    </form>
+					</div>
+				</div>
+			</div>
+
+			<div ng-repeat="talk in myTalk" class="sw-msg-item">
+				<div ng-show={{talk.dir}}>
+					<div class="avatar">
+						<a href="#/people/{{uid}}"><img ng-src={{other.img}} class="sw-avatar-img"></a>
+					</div>
+					<div class="feed-main">
+						<div class="feed-main-title">
+							<a href="#/people/{{uid}}" class="sw-link">{{other.realname}}</a>
+						</div>
+						<div class="feed-main-content" id="msg-feed-main">
+							<span class="sw-msg-time">{{talk.message}}</span>
+						</div>
+					</div>
+				</div>
+				<div ng-hide={{talk.dir}}>
+					<div class="avatar">
+						<a href="#/people/{{self.uid}}"><img ng-src={{self.img}} class="sw-avatar-img"></a>
+					</div>
+					<div class="feed-main">
+						<div class="feed-main-title">
+							<a href="#/people/{{uid}}" class="sw-link">{{self.realname}}</a>
+						</div>
+						<div class="feed-main-content" id="msg-feed-main">
+							<span class="sw-msg-time">{{talk.message}}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

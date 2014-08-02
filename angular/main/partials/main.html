@@ -7,7 +7,7 @@
 			<div class="sw-main-feed" id="sw-question-list">
 				<div ng-repeat="q in qList" class="sw-main-feed-item">
 					<div class="avatar">
-						<a href="#/people/{{q.uid}}"><img src="img/avatar.jpg" class="sw-avatar-img"></a>
+						<a href="#/people/{{q.uid}}"><img ng-src={{q.location}} class="sw-avatar-img"></a>
 					</div>
 					<div class="feed-main">
 						<div class="feed-main-title">
@@ -24,7 +24,8 @@
 						</div>
 					</div>
 					<div class="sw-meta-panel">
-						<span class="sw-follow" ng-click="follow(q.id)"><strong ng-hide="followed" class="followOrNot">关注问题</strong><strong ng-show="followed" class="followOrNot">取消关注</strong></span>
+						<span class="sw-follow" ng-click="follow(q.id,$index)"><strong ng-hide="q.follow" class="followOrNot">关注问题</strong><strong ng-show="q.follow" class="followOrNot">取消关注</strong></span>
+						<a class="sw-answer-num" href="#/question/{{q.id}}">{{q.answer_num}}个回答</a>
 					</div>
 				</div>
 			</div>

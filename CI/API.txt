@@ -17,11 +17,11 @@
  
 界面二：主页
         问题广场：QA_center/question_date_get
-                  id username realname title content view_num answer_num date follow best_answer
+                  id username realname title content view_num answer_num date follow best_answer[qid uid id realname content good bad date mygood]
         我关注的：QA_center/question_focus_get
-                  id username realname title content view_num answer_num date follow best_answer  
+                  id username realname title content view_num answer_num date follow best_answer[qid uid id realname content good bad date mygood]
         当日精华：QA_center/question_day_get
-                  id username realname title content view_num answer_num date follow best_answer
+                  id username realname title content view_num answer_num date follow best_answer[qid uid id realname content good bad date mygood]
             提问：QA/question_ask_post
             POST: title,content,tag1,tag2,tag3,tag4,tag5
         提取特定答案：
@@ -39,10 +39,10 @@
                   QA_center/view_answer_get($qid,$offset)
                   qid uid id realname content good bad date mygood
        支持某个回答
-                  QA_center/good_get($aid)
+                  QA_center/good_get($qid,$aid)
                   qid uid id content good bad date
        反对某个回答
-                  QA_center/bad_get($aid)
+                  QA_center/bad_get($qid,$aid)
                   qid uid id content good bad date
 
        关注某个问题
@@ -51,7 +51,7 @@
        
        得到某个特定回答：
                   QA_center/get_answer($aid)
-             返回：qid uid id realname content good bad date mygood
+             返回：qid uid id realname content good bad date mygood(我是否评价了)
 个人中心 
        我的提问：Personal_center/my_question_get($limit,$offset)
            返回：跟问题列表一样
@@ -59,24 +59,28 @@
            返回：回答列表 + title(对应问题题目)+description（对应问题描述）
        我关注的：Personal_center/my_attention($limit,$offset)
            返回：跟问题列表一样
-
+       个人中心：Personal_center/get_profile($uid)
+           返回：uid realname job jobid jobtime city jobplace gender description myprofile(判断是否自己的个人中心) location（照片）state
+   修改个人中心：Personal_center/modify_profile()
+           POST: 同上
+           返回：state
 私信系统：
        导航栏私信提醒：
                   Personal_center/letter_notify_get()
               GET:sum(表示未读消息读书)
        私信主页面：
                   Personal_center/letter_friend_get()
-              GET:uid realname date （此为一串信息）
+              GET:uid realname date （此为一串信息）location msg_total msg_unread
                   (uid 表示通信人id，realname 为名字，date为最后一条信息时间)
        点进聊天框：
-                  Personal_center/letter_friend_post()
-              POST: uid(对话对方uid,即上面传递的uid)
-              返回：receiver sender message date(已经按时间排过序)
+                  Personal_center/letter_talk_get($uid)
+              get: uid(对话对方uid,即上面传递的uid)
+              返回：1-in 0-out message date(已经按时间排过序)
        设置全部为已读：
-                  Personal_center/letter_set_look_get()
+                  Personal_center/letter_set_look_get($uid)
        
        回复/对话：Personal_center/letter_send_post()
-              POST:receiver(要email)，letter
+              POST:uid(要email)，letter
 
 通知系统：
       通知数量：

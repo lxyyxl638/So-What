@@ -63,7 +63,7 @@ mainApp.config(['$routeProvider',
       templateUrl:'partials/open-question.html',
       controller:'oqCtrl'
     }).
-    when('/notification',{
+    when('/notification/:uid',{
       templateUrl:'partials/notification.html',
       controller:'notificationCtrl'
     }).
@@ -71,9 +71,21 @@ mainApp.config(['$routeProvider',
       templateUrl:'partials/people.html',
       controller:'peopleCtrl'
     }).
+    when('/message/:uid',{
+      templateUrl:'partials/message.html',
+      controller:'messageCtrl'
+    }).
+    when('/setting/:uid',{
+      templateUrl:'partials/settings.html',
+      controller:'settingCtrl'
+    }).
     when('/question/:id',{
       templateUrl:'partials/question.html',
       controller:'questionCtrl'
+    }).
+    when('/talk/:uid',{
+      templateUrl:'partials/talk.html',
+      controller:'talkCtrl'
     }).
 		otherwise({
 			redirectTo: '/home'

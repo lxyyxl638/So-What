@@ -9,8 +9,32 @@
      	$this->load->library('session');
         $this->load->model('public_model');
      }
-
-     function profile(& $message)
+     
+     function profile_get(& $message,$uid)
+     {
+        $this->db->where('uid',$uid);
+        $query = $this->db->get_where('user_profile');
+        if ($query->num_rows() > 0)
+        {
+            $message = $query->row_array();
+            if ($uid == $this->session->userdata('uid'))
+            {
+                $message['myprofile'] = 1; 
+            }
+            else
+            {
+                $message['myprofile'] = 0;
+            }
+            $message['location'] = $this->public_model->large_photo_get($uid);
+            return TRUE;
+        }
+        else
+        {
+            $message['detail'] = "no this man's profile";
+            return FALSE;
+        }
+     }
+     function modify_profile(& $message)
      {
      	$uid = $this->session->userdata('uid');
      	$email = $this->session->userdata('email');
@@ -35,7 +59,7 @@
         $this->db->where('uid',$uid);
         if (!$this->db->update('user_profile',$row))
         {
-        	return FALSE;
+            return FALSE;
         }
         $config['upload_path'] = 'uploads';
         $config['allowed_types'] = 'jpg|png';
@@ -47,8 +71,6 @@
         $userfile = 'userfile';
         if (!$this->upload->do_upload($userfile))
          {
-            $message['detail'] = $this->upload->display_errors()
-            return FALSE;
          }
          else
          {
@@ -86,9 +108,8 @@
             $this->image_lib->initialize($config);
             $this->image_lib->resize();
          }
-
-         $query = $this->db->get_where('user_profile',array('uid' => $uid));
-         $message = $query->row_array();
+        // $query = $this->db->get_where('user_profile',array('uid' => $uid));
+        // $message = $query->row_array();
         return TRUE;
      }
     
@@ -154,27 +175,26 @@
          }
          else
          {
-             $sender = $this->session->userdata('email');
-             $receiver = $this->input->post('receiver');
+             $send_id = $this->session->userdata('uid');
+             $rece_id = $this->input->post('uid');
              $letter = $this->input->post('letter');
-             $id1 = $this->session->userdata('uid');
-             $id2 = $this->public_model->getid($receiver);
-             if ($id1 > $id2)
+             
+             if ($send_id > $rece_id)
              {
-                $tmp = $id1;
-                $id1 = $id2;
-                $id2 = $tmp;
+                $tmp = $send_id;
+                $send_id = $rece_id;
+                $rece_id = $tmp;
              }
              $data = array(
-                             'uid_1' => $id1,
-                             'uid_2' => $id2,
+                             'uid_1' => $send_id,
+                             'uid_2' => $rece_id,
                              'date' => date('Y-m-d H:i:s',time())
                           );
              
-             $query = $this->db->get_where('user_message_date',array('uid_1' => $id1,'uid_2' => $id2));
+             $query = $this->db->get_where('user_message_date',array('uid_1' => $send_id,'uid_2' => $rece_id));
              if ($query->num_rows() > 0)
              {
-                $this->db->where(array('uid_1' => $id1,'uid_2' => $id2));
+                $this->db->where(array('uid_1' => $send_id,'uid_2' => $rece_id));
                 $this->db->update('user_message_date',$data);
              }
              else
@@ -186,13 +206,15 @@
                 }
              }
 
-             $query = $this->db->get_where('user_message_date',array('uid_1' => $id1,'uid_2' => $id2));
+             $query = $this->db->get_where('user_message_date',array('uid_1' => $send_id,'uid_2' => $rece_id));
              $row = $query->row_array();
              $letter_id = $row['id'];
+             $send_id = $this->session->userdata('uid');
+             $rece_id = $this->input->post('uid');
              $data = array(
                             'letter_id' => $letter_id,
-                            'sender' => $sender,
-                            'receiver' => $receiver,
+                            'send_id' => $send_id,
+                            'rece_id' => $rece_id,
                             'message' => $letter,
                             'look' => 0,
                             'date' => date('Y-m-d H:i:s',time())
@@ -211,25 +233,25 @@
 
      function letter_notify(& $message)
      {
-        $receiver = $this->session->userdata('email');
-        $query = $this->db->get_where('user_message',array('receiver' => $receiver,'look' => '0'));
-        $message['sum'] = $query->num_rows();
+        $myuid = $this->session->userdata('uid');
+        $this->db->where('rece_id',$myuid);
+        $this->db->where('look','0');
+        $message['sum'] = $this->db->count_all_results('user_message');
         return TRUE; 
      }
 
      function letter_friend(& $message)
      {
-         $email = $this->session->userdata('email');
-         $id1 = $this->public_model->getid($email);         
-         $this->db->where('uid_1',$id1);
-         $this->db->or_where('uid_2',$id1);
+         $myuid = $this->session->userdata('uid');        
+         $this->db->where('uid_1',$myuid);
+         $this->db->or_where('uid_2',$myuid);
          $this->db->order_by('date','desc');
          $query = $this->db->get('user_message_date');
          $message = $query->result_array();
 
          foreach ($message as $key => $index)
          {
-            if ($index['uid_1'] === $id1) $index['uid'] = $index['uid_2'];
+            if ($index['uid_1'] == $myuid) $index['uid'] = $index['uid_2'];
             else $index['uid'] = $index['uid_1'];
             $uid = $index['uid'];
             $this->db->select('realname');
@@ -238,35 +260,57 @@
             $index['realname'] = $row['realname'];
             unset($index['uid_1']);
             unset($index['uid_2']);
+            $index['location'] = $this->public_model->middle_photo_get($uid);
+            $where = "(rece_id ='$myuid' AND send_id = '$uid') OR (rece_id = '$uid' AND send_id = '$myuid')";
+            $this->db->where($where);
+            $this->db->from('user_message');
+            $index['msg_total'] = $this->db->count_all_results();
+            $this->db->where('rece_id',$myuid);
+            $this->db->where('send_id',$uid);
+            $this->db->where('look','0');
+            $this->db->from('user_message');
+            $index['msg_unread'] = $this->db->count_all_results();
             $message[$key] = $index; 
          } 
+         return TRUE;
      }
 
-     function letter_talk(& $message)
+     function letter_talk(& $message,$uid)
      {
-         $uid = $this->input->post('uid');
          $myuid = $this->session->userdata('uid');
-         $uidemail = $this->public_model->getemail($uid);
-         $myemail = $this->public_model->getemail($myuid);
-         $where = "(sender = '$uidemail' AND receiver = '$myemail' ) OR (sender = '$myemail' AND receiver = '$uidemail')";
-         $message['where'] = $where;
+         // $where = "(sender = '$uidemail' AND receiver = '$myemail' ) OR (sender = '$myemail' AND receiver = '$uidemail')";
+         // $message['where'] = $where;
+         $where = "(rece_id ='$myuid' AND send_id = '$uid') OR (rece_id = '$uid' AND send_id = '$myuid')";
          $this->db->where($where);
          $this->db->order_by('date','desc');
          $query = $this->db->get('user_message');
-         $message = $query -> result_array();
-         $this->db->where('receiver',$uidemail);
-         $this->db->where('sender',$myemail);
+         $result = $query -> result_array();
+         foreach ($result as $key => $value)
+         {
+            if ($value['rece_id'] == $myuid) 
+            {
+                $value['dir'] = TRUE;
+            }
+            else
+            {
+                $value['dir'] = FALSE;
+            }
+            unset($value['rece_id']);
+            unset($value['send_id']);
+            $message[$key] = $value;
+         }
+         $this->db->where('rece_id',$myuid);
+         $this->db->where('send_id',$uid);
          $data = array(
                         'look' => '1'
                       );
-         $this->db->update('user_message',$data);
+         return $this->db->update('user_message',$data);
      }
 
      function letter_set_look(& $message)
      {
-        $uid = $this->session->userdata('uid');
-        $uidemail = $this->public_model->getemail($uid);
-        $this->db->where('receiver',$uidemail);
+        $myuid = $this->session->userdata('uid');
+        $this->db->where('rece_id',$myuid);
         $data = array(
                         'look' => '1'
                      );
