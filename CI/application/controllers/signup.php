@@ -23,34 +23,36 @@ class Signup extends REST_Controller
         parent::__construct();
         $this->load->database();
         $this->load->library('form_validation');
-        $this->load->model('crud');
         $this->load->library(array('session','encrypt'));
         $this->load->model('signup_model');
+        $this->form_validation->set_error_delimiters('','');
     }
 
-    function initial()
-    {
-         $xml = file_get_contents('php://input');
-         $xml = simplexml_load_string($xml);
-         foreach($xml->children() as $child)
-         { 
-             $_POST[$child->getName()] = "$child";
-         }
-         return $_POST;
-    }
 
-    function firstsignup_post()
+    function basic_post()
     {
-        // $_POST = $this->initial();
-         
+                 
          if ($this->form_validation->run('signup') === FALSE)
           {
              $message['state'] = "fail";
-             $message['detail'] = "验证失败";
+             $message['detail'] = form_error('email');
+             if (empty($message['detail'])) 
+              { 
+                $message['detail'] = form_error('password');
+              }
+             if (empty($message['detail'])) 
+              { 
+                $message['detail'] = form_error('firstname');
+              }
+             if (empty($message['detail'])) 
+              { 
+                $message['detail'] = form_error('lastname');
+              }
+             
              $this->response($message,200);
           }
          else 
-         {
+          {
              $email = $this->input->post('email');
              $password = $this->input->post('password');
              $lastname = $this->input->post('lastname');
@@ -59,57 +61,47 @@ class Signup extends REST_Controller
              $password = $this->encrypt->encode($password);
              $signupdate = date('Y-m-d H:i:s',time());
              $data = array( 
-                            'id' => 0,
                             'email'=> $email,
                             'password'=> $password,
                             'realname' => $realname,
                             'signupdate' => $signupdate,
                             'lastlogin'=> $signupdate,
-                            'lastloginfail'=> 0,
+                            //'lastloginfail'=> date("Y-m-d H:i:s",0),
                             'numloginfail' => 0
                            );
-             $message = $this->crud->insert('user',$data);
+             $this->db->insert('user',$data);
              $query = $this->db->get_where('user',array('email' => $email));
              $row = $query->row_array();
              $temp = array(
-                             'id' => 0,
                              'uid' => $row['id'], 
-                             'photo' => 0,
+                             'photo_upload' => 'N',
                              'realname' => $realname,
-                             'lastask' => 0
+                            // 'lastask' => date("Y-m-d H:i:s",0)
                           );
-             $this->crud->insert('user_profile',$temp);
-
-             if ($message['state'] == 'success')
-               {
-                     $query = $this->db->get_where('user',array('email'=>$email));
-                     $row = $query->row_array();
-                     $id = $row['id'];
-                     $newdata = array(
-                       'email' => $email,
-                       'password' => $password,
-                       'uid' => $id,
-                       'realname' => $realname,
-                       'status' => 'OK'
-                       );             
-                     $this->session->set_userdata($newdata);            
-                     $message['state'] = 'success';
-                     $this->response($message,200);
-               }
-              else 
-              {
-                 $message['detail'] = "signup fail";
-                 $this->response($message,200);
-              }
+             $this->db->insert('user_profile',$temp);             
+             $query = $this->db->get_where('user',array('email'=>$email));
+             $row = $query->row_array();
+             $id = $row['id'];
+             $newdata = array(
+               'email' => $email,
+               'password' => $password,
+               'uid' => $id,
+               'realname' => $realname,
+               'status' => 'OK'
+               );             
+             $this->session->set_userdata($newdata);            
+             $message['state'] = 'success';
+             $this->response($message,200);
+               
          }
             
     }
 
-    function secondsignup_post()
+    function info_post()
     {
        $message = '';
        //$_POST = $this->initial();
-       if (!$this->signup_model->secondsignup($message))
+       if (!$this->signup_model->info($message))
        {
           $message['state'] = "fail"; 
        }
@@ -121,11 +113,11 @@ class Signup extends REST_Controller
        $this->response($message,200);
     }
 
-    function thirdsignup_post()
+    function more_post()
     {
        $message ='';
       // $_POST = $this->initial();
-       if (!$this->signup_model->thirdsignup($message))
+       if (!$this->signup_model->more($message))
        {
          $message['state'] = "fail";
        }
@@ -134,6 +126,73 @@ class Signup extends REST_Controller
          $message['state'] = "success";
        }
 
+       $this->response($message,200);
+    }
+
+    function citylist_get()
+    {
+       $this->db->select('city');
+       $query = $this->db->get('user_city');
+       $data = $query->result_array();
+       $num = $query->num_rows();
+       for ($i = 0; $i < $num; $i++)
+       {
+         $message[$i] = $data[$i]['city'];
+       }
+       $this->response($message,200);
+    }
+
+    function collegelist_get($city)
+    {
+       $this->db->select('college');
+       $this->db->where('city',$city);
+       $query = $this->db->get('user_college');
+       $data = $query->result_array();
+       $num = $query->num_rows();
+       for ($i = 0; $i < $num; $i++)
+       {
+          $message[$i] = $data[$i]['college'];
+       }
+       $this->response($message,200);
+    }
+
+    function majorlist_get()
+    {
+       $this->db->select('major');
+       $query = $this->db->get('user_major');
+       $data = $query->result_array();
+       $num = $query->num_rows();
+       for ($i = 0; $i < $num; $i++)
+       {
+          $message[$i] = $data[$i]['major'];
+       }
+       $this->response($message,200);
+    }
+
+    function companylist_get($city)
+    {
+       $this->db->select('company');
+       $this->db->where('city',$city);
+       $query = $this->db->get('user_company');
+       $data = $query->result_array();
+       $num = $query->num_rows();
+       for ($i = 0; $i < $num; $i++)
+       {
+          $message[$i] = $data[$i]['company'];
+       }
+       $this->response($message,200);
+    }
+    
+    function positionlist_get()
+    {
+       $this->db->select('position');
+       $query = $this->db->get('user_position');
+       $data = $query->result_array();
+       $num = $query->num_rows();
+       for ($i = 0; $i < $num; $i++)
+       {
+          $message[$i] = $data[$i]['position'];
+       }
        $this->response($message,200);
     }
 

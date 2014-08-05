@@ -5,93 +5,96 @@ class signup_model extends CI_Model{
   {
   	parent::__construct();
   	$this->load->database();
-  	$this->load->library('session');
+  	$this->load->library(array('session','form_validation'));
+    $this->form_validation->set_error_delimiters('','');
   }
 
-  function secondsignup(& $message)
+  
+  function info(& $message)
   {
      $status = $this->session->userdata('status');
      if (isset($status) && $status == "OK")
      {
        if ($this->form_validation->run('secondsignup') === FALSE)
        {
-          $message['detail'] = "some messages are unavailable";
+          $message['detail'] = form_error('gender');
+          if (empty($message['detail'])) 
+              { 
+                $message['detail'] = form_error('occupation');
+              }
+          if (empty($message['detail'])) 
+              { 
+                $message['detail'] = form_error('bio');
+              }
           return FALSE;
        }
        else
-         {
-          $uid = $this->session->userdata('uid');
-          $data = array(
-                         'gender' => $this->input->post('gender'),
-                         'description' => $this->input->post('description'),
-                         'job' => $this->input->post('job')
-                        );
-          $this->db->where('id',$uid);
-          if (!$this->db->update('user_profile',$data))
-          {
-            $message['detail'] = "update fails";
-            return FALSE;
-          }
-          else
-          {
-            $job = $this->input->post('job');
-            // is a student
-            if ($job == 0) 
-            {
-               if (!$this->get_school($message))
-               {
-                  $message['detail'] = "get school fails";
-                  return FALSE;
-               } 
-            }
-            //is a worker
-            else
-            {
-               if (!$this->get_company($message))
-               {
-                  $message['detail'] = "get company fails";
-                  return FALSE;
-               }
-            }
-            return TRUE;
-         }
+        {
+             $uid = $this->session->userdata('uid');
+             $data = array(
+                            'gender' => $this->input->post('gender'),
+                            'bio' => $this->input->post('bio'),
+                            'occupation' => $this->input->post('occupation')
+                           );
+             $this->db->where('uid',$uid);
+             if (!$this->db->update('user_profile',$data))
+             {
+               $message['detail'] = "update fails";
+               return FALSE;
+             }
+             else
+             {
+               return TRUE;
+             }
         }
      }
      else
      {  
-        $message['detail'] = "you didn't login";
+        $message['detail'] = "Unlogin";
      	  return FALSE;
      }
   }
 
-  function thirdsignup(& $message)
+  function more(& $message)
   {
      $status = $this->session->userdata('status');
      if (isset($status) && $status == "OK")
      {
            $uid = $this->session->userdata('uid');
-           $this->db->select('job');
+           $this->db->select('occupation');
            $query = $this->db->get_where('user_profile',array('uid' => $uid));
            $row = $query->row_array();
-           $job = $row['job'];
+           $occupation = $row['occupation'];
            //is a student
-           if ($job === '0')
+           if ($occupation === 'S')
            {
              if ($this->form_validation->run('thirdsignup_college') === FALSE)
               {
-                   $message['detail'] = "some messages are unavailable";
+                   $message['detail'] = form_error('city');
+                   if (empty($message['detail'])) 
+                   { 
+                      $message['detail'] = form_error('college');
+                   }
+                   if (empty($message['detail'])) 
+                   { 
+                      $message['detail'] = form_error('major');
+                   }
+                   if (empty($message['detail'])) 
+                   { 
+                      $message['detail'] = form_error('year');
+                   }
                    return FALSE;
               }
               else
               {
                   $city = $this->input->post('city');
-                  $school = $this->input->post('school');
+                  $college = $this->input->post('college');
                   $major = $this->input->post('major');
                   $year = $this->input->post('year');
                   $query = $this->db->get_where('user_major',array('major' => $major));
                   $data = array(
                                  'city' => $city,
-                                 'jobplace' => $school,
+                                 'jobplace' => $college,
                                  'jobtime' => $year,
                                );
                   if ($query->num_rows() === 0) 
@@ -106,7 +109,7 @@ class signup_model extends CI_Model{
                         }
                   }
        
-                  $data['jobid'] = $major;
+                  $data['job'] = $major;
                   $this->db->where('uid',$uid);
                   if (!$this->db->update('user_profile',$data))
                   {
@@ -121,7 +124,15 @@ class signup_model extends CI_Model{
            { 
              if ($this->form_validation->run('thirdsignup_work') === FALSE)
              {
-                $message['detail'] = "some messages are unavailable";
+                $message['detail'] = form_error('city');
+                if (empty($message['detail'])) 
+                { 
+                   $message['detail'] = form_error('company');
+                }
+                if (empty($message['detail'])) 
+                { 
+                   $message['detail'] = form_error('position');
+                }
                 return FALSE;
              }
              else
@@ -146,7 +157,7 @@ class signup_model extends CI_Model{
                          }
                    }
         
-                   $data['jobid'] = $position;
+                   $data['job'] = $position;
                    $this->db->where('uid',$uid);
                    if (!$this->db->update('user_profile',$data))
                    {
@@ -159,41 +170,10 @@ class signup_model extends CI_Model{
      }
      else
      {  
-        $message['detail'] = "you didn't login";
+        $message['detail'] = "Unlogin";
         return FALSE;
      }
   }
 
-  function get_school(& $message)
-  {
-     $this->db->where('city');
-     $query = $this->db->get('city');
-     if (!isset($query) || $query == FALSE) return FALSE;
-     $result = $query->result_array();
-     foreach ($result as $value)
-     {
-        $this->db->select('school');
-        $query = $this->db->get_where('city',$value);
-        if (!isset($query) || $query == FALSE) return FALSE;
-        $message[$value] = $query->result_array();
-     }     
-     return TRUE;
-  }
-
-  function get_company(& $message)
-  {
-     $this->db->where('city');
-     $query = $this->db->get('city');
-     if (!isset($query) || $query == FALSE) return FALSE;
-     $result = $query->result_array();
-     foreach ($result as $value)
-     {
-        $this->db->select('company');
-        $query = $this->db->get_where('city',$value);
-        if (!isset($query) || $query == FALSE) return FALSE;
-        $message[$value] = $query->result_array();
-     } 
-     return TRUE;
-  }
 };
 ?>  

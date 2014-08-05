@@ -31,9 +31,9 @@ class QA_center_model extends CI_Model
         {
           $uid = $value['uid'];
           $value['location'] = $this->public_model->middle_photo_get($uid);
-          $best_answer = $this->QA_center_model->get_best_answer($value['id']);
+          $best_answer = $this->get_best_answer($value['id']);
           $this->get_answer($value['best_answer'],$best_answer);
-          $value['follow'] = $this->QA_center_model->get_follow($value['id']);
+          $value['follow'] = $this->get_follow($value['id']);
           $message[$key] = $value;
         }
       return TRUE;
@@ -49,9 +49,9 @@ class QA_center_model extends CI_Model
        {
           $uid = $value['uid'];
           $value['location'] = $this->public_model->middle_photo_get($uid);
-          $best_answer = $this->QA_center_model->get_best_answer($value['id']);
+          $best_answer = $this->get_best_answer($value['id']);
           $this->get_answer($value['best_answer'],$best_answer);
-          $value['follow'] = $this->QA_center_model->get_follow($value['id']);
+          $value['follow'] = $this->get_follow($value['id']);
           $message[$key] = $value;
        }
        return TRUE;
@@ -69,10 +69,10 @@ class QA_center_model extends CI_Model
        {
            $uid = $value['uid'];
            $value['location'] = $this->public_model->middle_photo_get($uid);
-           $value['best_answer'] = $this->QA_center_model->get_best_answer($value['id']);
-           $best_answer = $this->QA_center_model->get_best_answer($value['id']);
+           $value['best_answer'] = $this->get_best_answer($value['id']);
+           $best_answer = $this->get_best_answer($value['id']);
            $this->get_answer($value['best_answer'],$best_answer);
-           $value['follow'] = $this->QA_center_model->get_follow($value['id']);
+           $value['follow'] = $this->get_follow($value['id']);
            $message[$key] = $value;
         }
     return TRUE;

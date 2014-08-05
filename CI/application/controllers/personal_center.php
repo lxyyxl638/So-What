@@ -16,16 +16,15 @@
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 require APPPATH.'/libraries/REST_Controller.php';
 
-class Personal_Center extends REST_Controller
+class personal_center extends REST_Controller
 {
     function __construct()
     {
         parent::__construct();
         $this->load->database();
-        $this->load->model('crud');
         $this->load->library('encrypt');
         $this->load->library('session');
-        $this->load->model('Personal_center_model');
+        $this->load->model('personal_center_model');
         $this->load->model('public_model');
         $this->load->helper('url');
     }
@@ -37,7 +36,7 @@ class Personal_Center extends REST_Controller
      if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->profile_get($message,$uid))
+            if (!$this->personal_center_model->profile_get($message,$uid))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -62,7 +61,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->modify_profile($message))
+            if (!$this->personal_center_model->modify_profile($message))
             {
             	$message['state'] = "fail";
             	$this->response($message,200);
@@ -88,7 +87,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->my_question($message,$limit,$offset))
+            if (!$this->personal_center_model->my_question($message,$limit,$offset))
             {
               $message['state'] = "fail";
               $message['detail'] = "fail show questions";
@@ -113,7 +112,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->my_answer($message,$limit,$offset))
+            if (!$this->personal_center_model->my_answer($message,$limit,$offset))
             {
               $message['state'] = "fail";
               $message['detail'] = "fail show answers";
@@ -139,7 +138,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->my_attention($message,$limit,$offset))
+            if (!$this->personal_center_model->my_attention($message,$limit,$offset))
             {
               $message['state'] = "fail";
               $message['detail'] = "fail show attention";
@@ -165,7 +164,7 @@ class Personal_Center extends REST_Controller
     if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->letter_send($message))
+            if (!$this->personal_center_model->letter_send($message))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -191,7 +190,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->letter_notify($message))
+            if (!$this->personal_center_model->letter_notify($message))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -216,7 +215,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->letter_friend($message))
+            if (!$this->personal_center_model->letter_friend($message))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -241,7 +240,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->letter_talk($message,$uid))
+            if (!$this->personal_center_model->letter_talk($message,$uid))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -266,7 +265,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->letter_set_look($message))
+            if (!$this->personal_center_model->letter_set_look($message))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -293,7 +292,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->attention_new_answer($message))
+            if (!$this->personal_center_model->attention_new_answer($message))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -342,7 +341,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->answer_good($message))
+            if (!$this->personal_center_model->answer_good($message))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -390,7 +389,7 @@ class Personal_Center extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->Personal_center_model->myquestion_new_answer($message))
+            if (!$this->personal_center_model->myquestion_new_answer($message))
             {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -439,9 +438,9 @@ class Personal_Center extends REST_Controller
        $num_1 = 0;
        $num_2 = 0;
        $num_3 = 0;
-       $this->Personal_center_model->attention_new_answer($message,$num_1);
-       $this->Personal_center_model->answer_good($message,$num_2);
-       $this->Personal_center_model->myquestion_new_answer($message,$num_3);
+       $this->personal_center_model->attention_new_answer($message,$num_1);
+       $this->personal_center_model->answer_good($message,$num_2);
+       $this->personal_center_model->myquestion_new_answer($message,$num_3);
        $message = '';
        $num = $num_1 + $num_2 + $num_3;
        $message['num'] = $num;

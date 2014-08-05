@@ -22,7 +22,6 @@ class Public_function extends REST_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->model('crud');
         $this->load->library('session');
         $this->load->model('public_model');
     }

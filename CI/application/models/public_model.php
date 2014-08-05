@@ -5,6 +5,7 @@
    {
    	  parent::__construct();
    	  $this->load->database();
+      $this->load->helper('url');
    }
 
    function getid($email)
@@ -39,8 +40,8 @@
          $this->db->select('photo');
          $this->db->where('uid',$uid);
          $query = $this->db->get('user_profile');
-         $row = $query-> row_array();
-         if ($row['photo'] == 1) 
+         $row = $query->row_array();
+         if (isset($row['photo']) && $row['photo'] == 1) 
             {
                 return TRUE;
             }

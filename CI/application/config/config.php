@@ -14,8 +14,8 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/So-what/CI/';
-
+//$config['base_url']	= '121.40.92.145/CI';
+$config['base_url']	= 'http://localhost/So-What/';
 /*
 |--------------------------------------------------------------------------
 | Index File

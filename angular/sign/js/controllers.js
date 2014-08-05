@@ -22,7 +22,7 @@ signControllers.controller('signupCtrl',['$scope','$http',
 						url: url,
 						data: user,
 					}).success(function(response){
-                		window.location.assign("http://localhost/So-What/angular/info");
+                		window.location.assign("../../info");
                 	})
                 }
             }).error(function(response){
@@ -42,11 +42,11 @@ signControllers.controller('signinCtrl',['$scope','$http',
 			}).success(function(response){
                 if (response.state == "success")
                 {
-                	window.location.assign("http://localhost/So-What/angular/main");
+                	window.location.assign("../../main");
                 }
                 else if(response.state == "root")
                 {
-                	window.location.assign("http://localhost/So-What/angular/admin");
+                	window.location.assign("../../admin");
                 }
                 else
                 {

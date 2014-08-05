@@ -6,32 +6,33 @@ create table answer_vote(
   index(uid)
 ) default charset utf8;
 
-create table user_school(
-  city varchar(128) not null,
-  school varchar(128) not null,
+create table city(
   id int not null primary key auto_increment,
-  index(city),
-  index(school)
+  city varchar(128) not null default "未填写"
+) default charset utf8;
+
+create table user_school(
+  city varchar(128) not null default "未填写",
+  school varchar(128) not null default "未填写",
+  id int not null primary key auto_increment,
+  index(city)
 ) default charset utf8;
 
 create table user_company(
-  city varchar(128) not null,
-  company varchar(128) not null,
+  city varchar(128) not null default "未填写",
+  company varchar(128) not null default "未填写",
   id int not null primary key auto_increment,
-  index(city),
-  index(company)
+  index(city)
 ) default charset utf8;
 
 create table user_major(
-  major varchar(128) not null,
-  id int not null primary key auto_increment,
-  index(major)
+  major varchar(128) not null default "未填写",
+  id int not null primary key auto_increment
 ) default charset utf8;
 
 create table user_job(
-  job varchar(32) not null,
-  id int not null primary key auto_increment,
-  index(job)
+  job varchar(32) not null default "未填写",
+  id int not null primary key auto_increment
 ) default charset utf8;
 
 create table user_message(
@@ -78,39 +79,39 @@ create table q2a_answer(
 
 create table user(
   id int not null auto_increment primary key,
-  email varchar(128) not null,
-  password varchar(128) not null,
-  realname varchar(128) not null,
-  signupdate timestamp not null,
-  lastlogin timestamp not null,
-  lastloginfail timestamp not null,
-  numloginfail int not null
+  email varchar(128) not null default "未填写",
+  password varchar(128) not null default 0,
+  realname varchar(128) not null default "未填写",
+  signupdate timestamp not null default current_timestamp,
+  lastlogin timestamp not null default current_timestamp,
+  lastloginfail timestamp not null default current_timestamp,
+  numloginfail int not null default 0,
+  active enum('Y','N') not null default 'Y',
+  index(email)
 ) default charset utf8;
 
 create table user_profile(
   id int not null primary key auto_increment,
-  uid int not null,
-  realname varchar(128) not null,
-  photo varchar(128) not null,
-  job int not null,
-  jobid int not null,
-  jobtime timestamp not null,
-  city varchar(128) not null,
-  jobplace varchar(128) not null,
-  lastask timestamp not null,
+  uid int not null default 0,
+  realname varchar(128) not null default "未填写",
+  photo_upload enum('Y','N') not null default 'N',
+  occupation enum('S','W') not null default 'S',
+  job varchar(128) not null default "未填写",
+  jobtime int not null default 0,
+  city varchar(128) not null default "未填写",
+  jobplace varchar(128) not null default "未填写",
+  gender enum('F','M') not null default 'F',
+  bio varchar(256) not null defalut "未填写",
+  lastask timestamp not null default current_timestamp,
   index(uid),
   foreign key(uid) references user(id) on delete cascade on update cascade
 ) default charset utf8;
 
-create table city(
-  id int not null primary key auto_increment,
-  city varchar(128) not null 
-) default charset utf8;
 
 
 create table tag(
   id int not null primary key auto_increment,
-  tag varchar(128) not null
+  tag varchar(128) not null default "未填写"
 ) default charset utf8;
 
 create table user_tag(

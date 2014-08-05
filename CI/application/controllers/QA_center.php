@@ -16,16 +16,15 @@
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 require APPPATH.'/libraries/REST_Controller.php';
 
-class QA_center extends REST_Controller
+class qa_center extends REST_Controller
 {
     function __construct()
     {
         parent::__construct();
         $this->load->database();
-        $this->load->model('crud');
         $this->load->library('encrypt');
         $this->load->library('session');
-        $this->load->model('QA_center_model');
+        $this->load->model('qa_center_model');
         $this->load->model('public_model');
     }
 function initial()
@@ -46,7 +45,7 @@ function initial()
 
         if (isset($status) && $status === 'OK')
         {
-           if (!$this->QA_center_model->question_date_get($message))
+           if (!$this->qa_center_model->question_date_get($message))
            {
                $message['state'] = "fail";
                $this->response($message,200);
@@ -72,7 +71,7 @@ function initial()
 
         if (isset($status) && $status === 'OK')
         {
-           if (!$this->QA_center_model->question_focus_get($message))
+           if (!$this->qa_center_model->question_focus_get($message))
            {
                $message['state'] = "fail";
                $this->response($message,200);
@@ -98,7 +97,7 @@ function initial()
 
      if (isset($status) && $status === 'OK')
      {
-        if (!$this->QA_center_model->question_day_get($message))
+        if (!$this->qa_center_model->question_day_get($message))
            {
                $message['state'] = "fail";
                $this->response($message,200);
@@ -125,9 +124,9 @@ function initial()
         if (isset($status) && $status === 'OK')
         {
            $qid = 0;
-           if ($this->QA_center_model->ask($qid)!==FALSE)
+           if ($this->qa_center_model->ask($qid)!==FALSE)
             {
-                 $this->QA_center_model->tag($qid);
+                 $this->qa_center_model->tag($qid);
                  $message['state'] = "success";
                  $this->response($message,200);
             }
@@ -184,7 +183,7 @@ function initial()
            $result = $query->result_array();
            foreach ($result as $key => $value)
            {
-              $value['mygood'] = $this->QA_center_model->get_mygood($value['id']);
+              $value['mygood'] = $this->qa_center_model->get_mygood($value['id']);
               $value['location'] = $this->public_model->middle_photo_get($value['uid']);
               $message[$key] = $value;
            }
@@ -210,7 +209,7 @@ function initial()
         $content = $this->input->post('content');
         if ($content != FALSE)
          {
-            if ($this->QA_center_model->answer($qid,$content) != FALSE)
+            if ($this->qa_center_model->answer($qid,$content) != FALSE)
             {
                 $this->db->set('answer_num','answer_num + 1',FALSE);
                 $this->db->where('id',$qid);
@@ -245,14 +244,14 @@ function initial()
       $status = $this->session->userdata('status');
       if (isset($status) && $status === 'OK')
       {
-          if ($this->QA_center_model->good($qid,$aid) != FALSE)
+          if ($this->qa_center_model->good($qid,$aid) != FALSE)
           {
              $this->db->select('good,bad');
              $query = $this->db->get_where('q2a_answer',array('id' => $aid));
              if ($query->num_rows() > 0)
              { 
                 $message = $query->row_array();
-                $message['mygood'] = $this->QA_center_model->get_mygood($aid);
+                $message['mygood'] = $this->qa_center_model->get_mygood($aid);
                 $message['state'] = "success";
                 $this->response($message,200);
              }
@@ -283,14 +282,14 @@ function initial()
       $status = $this->session->userdata('status');
       if (isset($status) && $status === 'OK')
       {
-          if ($this->QA_center_model->bad($qid,$aid) != FALSE)
+          if ($this->qa_center_model->bad($qid,$aid) != FALSE)
           {
              $this->db->select('good,bad');
              $query = $this->db->get_where('q2a_answer',array('id' => $aid));
              if ($query->num_rows() > 0)
              { 
                 $message = $query-> row_array();
-                $message['mygood'] = $this->QA_center_model->get_mygood($aid);
+                $message['mygood'] = $this->qa_center_model->get_mygood($aid);
                 $message['state'] = "success";
                 $this->response($message,200);
              }
@@ -324,7 +323,7 @@ function initial()
         if (isset($status) && $status === 'OK')
         { 
            $follow = 0;
-           if (!$this->QA_center_model->question_attention($qid,$follow))
+           if (!$this->qa_center_model->question_attention($qid,$follow))
            {
               $message['state'] = "fail";
               $this->response($message,200);
@@ -349,14 +348,14 @@ function initial()
       $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         { 
-           if (!$this->QA_center_model->get_answer($message,$aid))
+           if (!$this->qa_center_model->get_answer($message,$aid))
            {
               $message['state'] = "fail";
               $this->response($message,200);
            }
            else
            {
-              $message['mygood'] = $this->QA_center_model->get_mygood($aid);
+              $message['mygood'] = $this->qa_center_model->get_mygood($aid);
               $this->response($message,200);
            }
         }

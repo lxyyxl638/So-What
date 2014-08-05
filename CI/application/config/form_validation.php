@@ -29,8 +29,8 @@
                       	 	'rules'=>'required'
                       	 	),
                       	 array(
-                      	 	'field'=>'job',
-                      	 	'label'=>'job',
+                      	 	'field'=>'occupation',
+                      	 	'label'=>'occupation',
                       	 	'rules'=>'required',
                       	 	),
         	          ),
@@ -42,8 +42,8 @@
 							'rules'=>'required'
 					      ),
                          array(
-					         'field'=>'school',
-							 'label'=>'school',
+					         'field'=>'college',
+							 'label'=>'college',
 							 'rules'=>'required'
 					       ),
 					     array(

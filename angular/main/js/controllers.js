@@ -31,7 +31,7 @@ mainControllers.controller('globalCtrl',['$scope','$http', '$interval',
 			$http.get('../../CI/index.php/login/user_logout/format/json').success(function(response){
 				if(response.state == "success")
 				{
-					window.location.assign("http://localhost/So-What/angular/sign");
+					window.location.assign("../sign");
 				}
 			});
 		}
@@ -42,17 +42,17 @@ mainControllers.controller('mainCtrl',['$scope','$http',
 		$scope.qList={};
 		if($.isEmptyObject($scope.qList))
 		{
-			$http.get('../../CI/index.php/QA_center/question_date/format/json').success(function(data){
+			$http.get('../../CI/index.php/qa_center/question_date/format/json').success(function(data){
 				$scope.qList = data;
 			});
 		}
 		$scope.questionByDate = function() {
-			$http.get('../../CI/index.php/QA_center/question_date/format/json').success(function(data){
+			$http.get('../../CI/index.php/qa_center/question_date/format/json').success(function(data){
 				$scope.qList = data;
 			});
 		}
 		$scope.questionByUser = function() {
-			$http.get('../../CI/index.php/QA_center/question_focus/format/json').success(function(data){
+			$http.get('../../CI/index.php/qa_center/question_focus/format/json').success(function(data){
 				if (typeof(data) == typeof("string"))
 				{
 					$scope.qList = {};
@@ -64,12 +64,12 @@ mainControllers.controller('mainCtrl',['$scope','$http',
 			});
 		}
 		$scope.questionByDay = function() {
-			$http.get('../../CI/index.php/QA_center/question_day/format/json').success(function(data){
+			$http.get('../../CI/index.php/qa_center/question_day/format/json').success(function(data){
 				$scope.qList = data;
 			});
 		}
 		$scope.follow = function(id,$index){
-			$http.get('../../CI/index.php/QA_center/question_attention/'+id+'/format/json').success(function(data){
+			$http.get('../../CI/index.php/qa_center/question_attention/'+id+'/format/json').success(function(data){
 				if(data.follow == 0)
 				{
 					$scope.qList[$index].follow = 0;
@@ -157,7 +157,7 @@ mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams',
 		}
 
 		$scope.follow = function(id,$index){
-			$http.get('../../CI/index.php/QA_center/question_attention/'+id+'/format/json').success(function(data){
+			$http.get('../../CI/index.php/qa_center/question_attention/'+id+'/format/json').success(function(data){
 				if(data.follow == 0)
 				{
 					$scope.myquestion[$index].follow = 0;
@@ -174,7 +174,7 @@ mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams',
 mainControllers.controller('messageCtrl',['$scope','$http','$routeParams',
 	function($scope,$http,$routeParams){
 		$scope.uid = $routeParams.uid;
-		$http.get('../../CI/index.php/Personal_center/letter_friend/format/json').success(function(data){
+		$http.get('../../CI/index.php/personal_center/letter_friend/format/json').success(function(data){
 			if (typeof(data) == typeof("string")){
 				$scope.myMessage = {};
 			}
@@ -198,7 +198,7 @@ mainControllers.controller('talkCtrl',['$scope','$http','$routeParams',
 			$scope.self.img = data.location;
 		});
 
-		$http.get('../../CI/index.php/Personal_center/letter_talk/'+$scope.uid+'/format/json').success(function(data){
+		$http.get('../../CI/index.php/personal_center/letter_talk/'+$scope.uid+'/format/json').success(function(data){
 			if (typeof(data) == typeof("string")){
 				$scope.myTalk = {};
 			}
@@ -238,10 +238,10 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams',
 	function($scope,$http,$routeParams){
 		$scope.question = {};
 		$scope.question.qid = $routeParams.id;
-		$http.get('../../CI/index.php/QA_center/view_question/'+ $scope.question.qid +'/format/json').success(function(data){
+		$http.get('../../CI/index.php/qa_center/view_question/'+ $scope.question.qid +'/format/json').success(function(data){
 				$scope.q = data;
 			});
-		$http.get('../../CI/index.php/QA_center/view_answer/'+ $scope.question.qid +'/0/format/json').success(function(data){
+		$http.get('../../CI/index.php/qa_center/view_answer/'+ $scope.question.qid +'/0/format/json').success(function(data){
 				if (typeof(data) == typeof("string"))
 				{
 					$scope.answers = {};
@@ -276,7 +276,7 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams',
 				}
 			});
 		$scope.like = function(qid,aid,$index){
-			$http.get('../../CI/index.php/QA_center/good/'+qid+'/'+aid+'/format/json').success(function(data){
+			$http.get('../../CI/index.php/qa_center/good/'+qid+'/'+aid+'/format/json').success(function(data){
 				if(data.mygood == 1){
 					$scope.answers[$index].like = false;
 					$scope.answers[$index].cancellike = true;
@@ -304,7 +304,7 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams',
 			});
 		}
 		$scope.dislike = function(qid,aid,$index){
-			$http.get('../../CI/index.php/QA_center/bad/'+qid+'/'+aid+'/format/json').success(function(data){
+			$http.get('../../CI/index.php/qa_center/bad/'+qid+'/'+aid+'/format/json').success(function(data){
 				if(data.mygood == 1){
 					$scope.answers[$index].like = false;
 					$scope.answers[$index].cancellike = true;
@@ -336,7 +336,7 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams',
 mainControllers.controller('askCtrl',['$scope','$http',
 	function($scope,$http){
 		$scope.askquestion = function(q){
-			var url = '../../CI/index.php/QA_center/question_ask/format/json/';
+			var url = '../../CI/index.php/qa_center/question_ask/format/json/';
 			$http({
 				method: 'POST',
 				url: url,
@@ -355,7 +355,7 @@ mainControllers.controller('askCtrl',['$scope','$http',
 mainControllers.controller('answerCtrl',['$scope','$http',
 	function($scope,$http){
 		$scope.answerquestion = function(a){
-			var url = '../../CI/index.php/QA_center/answer/'+$scope.question.qid+'/format/json/';
+			var url = '../../CI/index.php/qa_center/answer/'+$scope.question.qid+'/format/json/';
 			$http({
 				method: 'POST',
 				url: url,
