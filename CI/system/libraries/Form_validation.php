@@ -1110,6 +1110,11 @@ class CI_Form_validation {
 	 * @param	string
 	 * @return	bool
 	 */
+	public function alpha_numeric_chinese($str)
+	{
+		return ( ! preg_match("/^([a-z0-9\x{4e00}-\x{9fa5}])+$/u", $str)) ? FALSE : TRUE;
+	}
+	
 	public function alpha_numeric($str)
 	{
 		return ( ! preg_match("/^([a-z0-9])+$/i", $str)) ? FALSE : TRUE;

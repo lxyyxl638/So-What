@@ -8,17 +8,17 @@
 				     array(
 					        'field'=>'password',
 							'label'=>'password',
-							'rules'=>'required|min_length[6]|max_length[12]'
+							'rules'=>'required|min_length[6]|max_length[16]|alpha_dash'
 					      ),		  
 				     array(
 					        'field'=>'firstname',
 							'label'=>'firstname',
-							'rules'=>'required'
+							'rules'=>'required|alpha_numeric_chinese'
 					      ),
 				     array( 
 				     	    'field'=>'lastname',
 				     	    'label'=>'lastname',
-				     	    'rules'=>'required'
+				     	    'rules'=>'required|alpha_numeric_chinese'
 				     	  ),
 		              ),
         'secondsignup'=>array
