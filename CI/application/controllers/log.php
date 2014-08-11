@@ -16,7 +16,7 @@
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 require APPPATH.'/libraries/REST_Controller.php';
 
-class Login extends REST_Controller
+class Log extends REST_Controller
 {
     function __construct()
     {
@@ -37,7 +37,7 @@ class Login extends REST_Controller
     //      return $_POST;
     // }
 
-    function userlogin_post()
+    function login_post()
     {
          $email = $this->input->post('email',TRUE);
          $password = $this->input->post('password',TRUE);
@@ -94,7 +94,7 @@ class Login extends REST_Controller
                      // $this->db->where('email',$email);
                      // $this->db->update('user',$data);
                      $message['state'] = 'fail';
-                     $message['detail'] = 'pswWrong';
+                     $message['detail'] = 'passwordWrong';
                      $this->response($message,200);
                 }
              }
@@ -114,7 +114,7 @@ class Login extends REST_Controller
             
     }
 
-    function user_logout_get()
+    function logout_get()
     {
        $this->session->sess_destroy();
        $message['state'] = "success";

@@ -19,102 +19,69 @@ class QA_center_model extends CI_Model
  //         }
  //         return $_POST;
  //    }
- function question_date_get(& $message)
- {
-      $time_point = date('Y-m-d H:i:s',time() - 30 * 60 * 60 * 24);
-      $this->db->select('id,title,uid,date,realname,answer_num,view_num');
-      $this->db->where('date >',$time_point);
-      $this->db->order_by("date","desc");
-      $query = $this->db->get('q2a_question');
-      $result = $query->result_array();
-      foreach ($result as $key => $value)
-        {
-          $uid = $value['uid'];
-          $value['location'] = $this->public_model->middle_photo_get($uid);
-          $best_answer = $this->get_best_answer($value['id']);
-          $this->get_answer($value['best_answer'],$best_answer);
-          $value['follow'] = $this->get_follow($value['id']);
-          $message[$key] = $value;
-        }
-      return TRUE;
- }
- 
- function question_focus_get(& $message)
- {
-      $uid = $this->session->userdata('uid');
-      $order = "select * from q2a_question where id in (select distinct qid from tag_question where tid in (select tid from user_tag where uid = 5)) order by date desc";
-      $query = $this->db->query($order);
-      $result = $query->result_array();
-       foreach ($result as $key => $value)
-       {
-          $uid = $value['uid'];
-          $value['location'] = $this->public_model->middle_photo_get($uid);
-          $best_answer = $this->get_best_answer($value['id']);
-          $this->get_answer($value['best_answer'],$best_answer);
-          $value['follow'] = $this->get_follow($value['id']);
-          $message[$key] = $value;
-       }
-       return TRUE;
- }
 
- function question_day_get(& $message)
- {
-     $time_point = date('Y-m-d H:i:s',time() - 60*60*24);
-     $this->db->select('id,title,uid,date,realname,answer_num,view_num');
-     $this->db->where('date >',$time_point);
-     $this->db->order_by("view_num","desc");
-     $query = $this->db->get('q2a_question');
-     $result = $query->result_array();
-     foreach ($result as $key => $value)
-       {
-           $uid = $value['uid'];
-           $value['location'] = $this->public_model->middle_photo_get($uid);
-           $value['best_answer'] = $this->get_best_answer($value['id']);
-           $best_answer = $this->get_best_answer($value['id']);
-           $this->get_answer($value['best_answer'],$best_answer);
-           $value['follow'] = $this->get_follow($value['id']);
-           $message[$key] = $value;
-        }
-    return TRUE;
- }
- function ask(& $qid)
+ function ask(&$message,&$qid)
   {
-    $uid = $this->session->userdata('uid');
-    $email = $this->session->userdata('email');
-	$realname = $this->session->userdata('realname');
-	$datetime = time();
-	$query = $this->db->get_where('user_profile',array('uid' => $uid));
-	$row = $query->row_array();
-	$lastask = strtotime($row['lastask']);
+     $uid = $this->session->userdata('uid');
+     $email = $this->session->userdata('email');
+	   $realname = $this->session->userdata('realname');
+	   $datetime = time();
+     $this->db->select('lastask');
+	   $query = $this->db->get_where('user_profile',array('uid' => $uid));
+	   $row = $query->row_array();
+     $lastask = $row['lastask'];
+	   $lastask = strtotime($lastask);
   	  
-	if (!isset($lastask) || ($datetime - $lastask) > 60)
-     {	
-	   $data = array(
-	     'uid' => $uid,
-	     'realname' => $realname,
-	     'date' => date('Y-m-d H:i:s',$datetime),
-	     'title' => $this->input->post('title'),
-	     'content' => $this->input->post('content'),
-	     'like_num' => 0,
-	     'view_num' => 0,
-	     'answer_num' => 0
-	     );
-	     if ($this->db->insert('q2a_question',$data))
-		  {
-		  	 $this->db->select('id');
-		  	 $this->db->order_by("id","desc");
-		  	 $query = $this->db->get('q2a_question');
-             $row = $query->row_array();
-             $qid = $row['id'];
-		     $data = array(
-			                'lastask' => date('Y-m-d H:i:s',$datetime)
-			              );
-			 return ($this->db->update('user_profile',$data,array('uid' => $uid)));
-		  }
-		 else return FALSE;
-	  }
-	else 
-       return FALSE;	
+	   if (!isset($lastask) || ($datetime - $lastask) > 60)
+        {	
+          if ($this->form_validation->run('ask') == FALSE)
+            { 
+                $message['detail'] = form_error('title');
+                if (empty($message['detail']))
+                   {
+                      $message['detail'] = form_error('content');
+                   }
+                return FALSE;
+            } 
+	         $data = array(
+	                         'uid' => $uid,
+	                         'realname' => $realname,
+	                         'date' => date('Y-m-d H:i:s',$datetime),
+	                         'title' => $this->input->post('title'),
+	                         'follow_num' => 0,
+	                         'view_num' => 0,
+	                         'answer_num' => 0
+	                      );
+          if (!empty($_POST('content')))
+          {
+             $data['content'] = $this->input->post('content'); 
+          } 
+          else
+          {
+            $data['content'] = "";
+          }
+
+	        if ($this->db->insert('q2a_question',$data))
+	   	       {
+	   	      	   $this->db->select('id');
+	   	      	   $this->db->order_by("id","desc");
+	   	      	   $query = $this->db->get('q2a_question');
+                 $row = $query->row_array();
+                 $qid = $row['id'];
+                 $message['qid'] = $qid;
+	   	           $data = array(
+	   	    	                  'lastask' => date('Y-m-d H:i:s',$datetime)
+	   	    	                  );
+	   	    	     $this->db->update('user_profile',$data,array('uid' => $uid));
+	   	          
+             }
+	 
+	     }
+	   else 
+       {
+           $message['detail'] = "timeInterval";
+           return FALSE;
+       }	
   }
 
 	function tag($qid)
@@ -144,21 +111,30 @@ class QA_center_model extends CI_Model
 	    }
 	}
 
-	function answer($qid,$content)
+	function answer(&$message,$qid)
 	{
-		$uid = $this->session->userdata('uid');
-		$realname = $this->session->userdata('realname');
-        $data = array(
-        	            'qid' => $qid,
-        	            'content' => $content,
-        	            'realname' => $realname,
-        	            'uid' => $uid,
-        	            'good' => 0,
-        	            'bad' => 0,
-        	            'date' => date('Y-m-d H:i:s',time())
-        	         );
-        $this->db->insert('q2a_answer',$data);
-        return TRUE;
+       if ($this->form_validation->run('answer') === FALSE)
+         {
+             $message['detail'] = form_error('content');
+             return FALSE;
+         }
+		   $uid = $this->session->userdata('uid');
+		   $realname = $this->session->userdata('realname');
+       $content = $this->input->post('content');
+       $data = array(
+       	             'qid' => $qid,
+       	             'content' => $content,
+       	             'realname' => $realname,
+       	             'uid' => $uid,
+       	             'good' => 0,
+       	             'bad' => 0,
+       	             'date' => date('Y-m-d H:i:s',time())
+       	           );
+       $this->db->insert('q2a_answer',$data);
+       $this->db->set('answer_num','answer_num + 1',FALSE);
+       $this->db->where('id',$qid);
+       $this->db->update('q2a_question');
+       return TRUE;
 	}
 
 	function good($qid,$aid)
@@ -246,43 +222,113 @@ class QA_center_model extends CI_Model
 		}
 	}
 	
-	function question_attention($qid,& $follow)
+	function question_follow(&$message,$qid)
 	{
-		$uid = $this->session->userdata('uid');
-		$query = $this->db->get_where('user_question',array('uid' => $uid,'qid' => $qid));
-		if ($query->num_rows() > 0)
-		{
-		   if (!$this->db->delete('user_question',array('uid' => $uid,'qid' => $qid)))
-		   {
-		   	  $message['detail'] = "delete fails";
-		   	  return FALSE;
-		   }			
-		   else 
-		   {
-		   	  $follow = 0;
-		   	  return TRUE;
-		   }
-		}
-		else
-		{
-			$data = array(
-				            'uid' => $uid,
-				            'qid' => $qid,
-				            'date' => date('Y-m-d H:i:s',time())
-				         );
-			if (!$this->db->insert('user_question',$data))
-			{
-				$message['detail'] = "insert user_question fails";
-				return FALSE;
-			}
-			else
-			{
-			   $follow = 1;
-			   return TRUE;
-			}
-		}
+		  $uid = $this->session->userdata('uid');
+		  $query = $this->db->get_where('user_question',array('uid' => $uid,'qid' => $qid));
+		  if ($query->num_rows() > 0)
+		  {
+		     if (!$this->db->delete('user_question',array('uid' => $uid,'qid' => $qid)))
+		     {
+		     	  $message['detail'] = "delete fails";
+		     	  return FALSE;
+		     }			
+		     else 
+		     {
+		     	  $message['follow'] = 'N';
+            $this->db->set('follow_num','follow_num - 1',FALSE);
+            $this->db->where('id',$qid);
+            $this->db->update('q2a_question');
+            $this->db->select('follow_num');
+            $this->db->where('id',$qid);
+            $query = $this->db->get('q2a_question');
+            $row = $query -> row_array();
+            $message['follow_num'] = $row['follow_num'];
+		     	  return TRUE;
+		     }
+		  }
+		  else
+		  {
+		  	$data = array(
+		  		            'uid' => $uid,
+		  		            'qid' => $qid,
+		  		            'date' => date('Y-m-d H:i:s',time())
+		  		         );
+		  	if (!$this->db->insert('user_question',$data))
+		  	{
+		  		$message['detail'] = "insert user_question fails";
+		  		return FALSE;
+		  	}
+		  	else
+		  	{
+		  	    $message['follow'] = 'Y';
+            $this->db->set('follow_num','follow_num + 1',FALSE);
+            $this->db->where('id',$qid);
+            $this->db->update('q2a_question');
+            $this->db->select('follow_num');
+            $this->db->where('id',$qid);
+            $query = $this->db->get('q2a_question');
+            $row = $query -> row_array();
+            $message['follow_num'] = $row['follow_num'];
+            return TRUE;
+		  	}
+		  }
 	}
    
+   function view_question_get(& $message,$qid)
+   {
+       $this->db->set('view_num','view_num + 1',FALSE);
+       $this->db->where('id',$qid);
+       $this->db->update('q2a_question');
+       $query = $this->db->get_where('q2a_question',array('id' => $qid));
+       if ($query->num_rows() > 0)
+        {
+             $message = $query->row_array();
+             $message['location'] = $this->public_model->middle_photo_get($message['uid']);
+        }
+        else
+        {
+            $message['detail'] = "Unlogin";
+            return FALSE;
+        }  
+       return TRUE;
+   }
+
+   function view_answer_get(& $message,$qid = 0,$aid = 0,$limit = 10,$offset = 0)
+   {
+       if ($aid == 0)
+        {
+           $this->db->order_by("good","desc");
+           $this->db->limit($limit,$offset);
+           $query = $this->db->get_where('q2a_answer',array('qid' => $qid));
+           $result = $query->result_array();
+           foreach ($result as $key => $value)
+           {
+              $value['mygood'] = $this->qa_center_model->get_mygood($value['id']);
+              $value['location'] = $this->public_model->middle_photo_get($value['uid']);
+              $message[$key] = $value;
+           }
+           return TRUE;
+        }
+        else
+        {
+            $this->db->where('id',$aid);
+            $query = $this->db->get('q2a_answer');
+            if ($query->num_rows() > 0)
+            {
+               $message = $query->row_array();
+               $message['mygood'] = $this->qa_center_model->get_mygood($aid);
+               $uid = $this->session->userdata('uid');
+               $message['location'] = $this->public_model->middle_photo_get($uid);
+               return TRUE;
+            }
+            else
+            {
+               $message['detail'] = "Unlogin";
+               return FALSE;
+            }
+        }
+   }
    /*检测当前用户是否关注此问题*/
 	function get_follow($qid)
 	{
@@ -290,30 +336,15 @@ class QA_center_model extends CI_Model
 		$query = $this->db->get_where('user_question',array('uid' => $uid,'qid' => $qid));
 		if ($query->num_rows() > 0)
 		{
-            return "1";
+            return 'Y';
 		}
 		else
 		{
-            return "0";
+            return 'N';
 		}
 	}
 
-	function get_best_answer($qid)
-	{ 
-		$this->db->select('id');
-		$this->db->where('qid',$qid);
-		$this->db->order_by('good desc,bad asc');
-		$query = $this->db->get('q2a_answer');
-		if ($query->num_rows() > 0)
-		{
-		    $row = $query->row_array();
-            return $row['id'];
-        }
-        else
-        {
-        	return '0';
-        }
-	}
+	
     
     function get_mygood($aid)
     {
@@ -332,12 +363,6 @@ class QA_center_model extends CI_Model
     		return 0;
     	}
     }
-	function get_answer(& $message,$aid)
-	{
-		$this->db->where('id',$aid);
-		$query = $this->db->get('q2a_answer');
-		$message = $query->row_array();
-		return TRUE;
-	}
+	
  }
 ?>

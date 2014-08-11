@@ -76,7 +76,7 @@ class Signup extends REST_Controller
                              'uid' => $row['id'], 
                              'photo_upload' => 'N',
                              'realname' => $realname,
-                            // 'lastask' => date("Y-m-d H:i:s",0)
+                             'lastask' => date("Y-m-d H:i:s",1)
                           );
              $this->db->insert('user_profile',$temp);             
              $query = $this->db->get_where('user',array('email'=>$email));
@@ -129,23 +129,23 @@ class Signup extends REST_Controller
        $this->response($message,200);
     }
 
-    function citylist_get()
+    function provincelist_get()
     {
-       $this->db->select('city');
-       $query = $this->db->get('user_city');
+       $this->db->select('province');
+       $query = $this->db->get('user_province');
        $data = $query->result_array();
        $num = $query->num_rows();
        for ($i = 0; $i < $num; $i++)
        {
-         $message[$i] = $data[$i]['city'];
+         $message[$i] = $data[$i]['province'];
        }
        $this->response($message,200);
     }
 
-    function collegelist_get($city)
+    function collegelist_get($province)
     {
        $this->db->select('college');
-       $this->db->where('city',$city);
+       $this->db->where('province',$province);
        $query = $this->db->get('user_college');
        $data = $query->result_array();
        $num = $query->num_rows();
@@ -156,9 +156,10 @@ class Signup extends REST_Controller
        $this->response($message,200);
     }
 
-    function majorlist_get()
+    function majorlist_get($college)
     {
        $this->db->select('major');
+       $this->db->where('college',$college);
        $query = $this->db->get('user_major');
        $data = $query->result_array();
        $num = $query->num_rows();
@@ -169,10 +170,10 @@ class Signup extends REST_Controller
        $this->response($message,200);
     }
 
-    function companylist_get($city)
+    function companylist_get($province)
     {
        $this->db->select('company');
-       $this->db->where('city',$city);
+       $this->db->where('province',$province);
        $query = $this->db->get('user_company');
        $data = $query->result_array();
        $num = $query->num_rows();

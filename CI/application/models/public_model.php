@@ -23,25 +23,25 @@
       $row = $query-> row_array();
       return $row['email'];
    }
-
-   function uidrealname(& $message,$uid)
+   
+   function uidrealname($uid)
    {
-      $this->db->select('realname');
-      $this->db->where('uid',$uid);
-      $query = $this->db->get_where('user_profile');
-      $row = $query->row_array();
-      $message['uidrealname'] = $row['realname'];
-      return TRUE;
+       $this->db->select('realname');
+       $this->db->where('uid',$uid);
+       $query = $this->db->get('user_profile');
+       $row = $query->row_array();
+       return $row['realname'];
    }
+   
 
    /*判断是否有照片*/
      function get_photo($uid)
      {
-         $this->db->select('photo');
+         $this->db->select('photo_upload');
          $this->db->where('uid',$uid);
          $query = $this->db->get('user_profile');
          $row = $query->row_array();
-         if (isset($row['photo']) && $row['photo'] == 1) 
+         if (isset($row['photo_upload']) && $row['photo_upload'] == 'Y') 
             {
                 return TRUE;
             }
@@ -88,6 +88,19 @@
                $location = "uploads/".$uid."_small.jpg";
            }
          return base_url("$location");
-    } 
+    }
+
+    function tiny_photo_get($uid)
+    {   
+         if (!$this->get_photo($uid))
+           {
+               $location = "uploads/default_tiny.jpg";
+           }
+           else
+           {
+               $location = "uploads/".$uid."_tiny.jpg";
+           }
+         return base_url("$location");
+    }  
 };
 ?>

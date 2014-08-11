@@ -26,42 +26,29 @@ class Public_function extends REST_Controller
         $this->load->model('public_model');
     }
    
-	function myrealname_get()
+	function myinfo_get()
     {
-    	$status = $this->session->userdata('status');
+    	  $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
            $message['myrealname'] = $this->session->userdata('realname');
+           $message['myuid'] = $this->session->userdata('uid');
            $uid = $this->session->userdata('uid');
-           $message['location'] = $this->public_model->small_photo_get($uid);
+           $message['location_small'] = $this->public_model->small_photo_get($uid);
+           $message['location_middle'] = $this->public_model->middle_photo_get($uid);
+           $message['location_large'] = $this->public_model->large_photo_get($uid);
            $this->response($message,200);
         }
         else
         {
           $message['state'] = "fail";
-          $message['detail'] = "You didn't login!";
+          $message['detail'] = "Unlogin";
           $this->response($message,200);
         }
     }
  
-  function myuid_get()
-    {
-      $status = $this->session->userdata('status');
-        if (isset($status) && $status === 'OK')
-        {
-           $message['myuid'] = $this->session->userdata('uid');
-           $this->response($message,200);
-        }
-        else
-        {
-          $message['state'] = "fail";
-          $message['detail'] = "You didn't login!";
-          $this->response($message,200);
-        }
-        $this->response($message,200);
-    }
 
-    function uidrealname_get($uid)
+    function uidinfo_get($uid)
     {
     	$status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
@@ -81,11 +68,12 @@ class Public_function extends REST_Controller
         else
         {
           $message['state'] = "fail";
-          $message['detail'] = "You didn't login!";
+          $message['detail'] = "Unlogin";
           $this->response($message,200);
         }
     }
 
+   
 /*得到100*100的大头像*/
     function large_photo_get($uid)
     {
@@ -98,7 +86,7 @@ class Public_function extends REST_Controller
         else
         {
           $message['state'] = "fail";
-          $message['detail'] = "You didn't login!";
+          $message['detail'] = "Unlogin";
           $this->response($message,200);
         }
    }
@@ -114,7 +102,7 @@ class Public_function extends REST_Controller
         else
         {
           $message['state'] = "fail";
-          $message['detail'] = "You didn't login!";
+          $message['detail'] = "Unlogin";
           $this->response($message,200);
         }
    }
@@ -130,7 +118,23 @@ class Public_function extends REST_Controller
         else
         {
           $message['state'] = "fail";
-          $message['detail'] = "You didn't login!";
+          $message['detail'] = "Unlogin";
+          $this->response($message,200);
+        }
+   }
+
+   function tiny_photo_get($uid)
+    {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        { 
+           $message['location'] = $this->public_model->tiny_photo_get($uid);
+           $this->response($message,200);
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "Unlogin";
           $this->response($message,200);
         }
    }

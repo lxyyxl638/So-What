@@ -70,7 +70,7 @@ class signup_model extends CI_Model{
            {
              if ($this->form_validation->run('thirdsignup_college') === FALSE)
               {
-                   $message['detail'] = form_error('city');
+                   $message['detail'] = form_error('province');
                    if (empty($message['detail'])) 
                    { 
                       $message['detail'] = form_error('college');
@@ -87,13 +87,13 @@ class signup_model extends CI_Model{
               }
               else
               {
-                  $city = $this->input->post('city');
+                  $province = $this->input->post('province');
                   $college = $this->input->post('college');
                   $major = $this->input->post('major');
                   $year = $this->input->post('year');
                   $query = $this->db->get_where('user_major',array('major' => $major));
                   $data = array(
-                                 'city' => $city,
+                                 'province' => $province,
                                  'jobplace' => $college,
                                  'jobtime' => $year,
                                );
@@ -124,7 +124,7 @@ class signup_model extends CI_Model{
            { 
              if ($this->form_validation->run('thirdsignup_work') === FALSE)
              {
-                $message['detail'] = form_error('city');
+                $message['detail'] = form_error('province');
                 if (empty($message['detail'])) 
                 { 
                    $message['detail'] = form_error('company');
@@ -137,22 +137,22 @@ class signup_model extends CI_Model{
              }
              else
              {
-                   $city = $this->input->post('city');
+                   $province = $this->input->post('province');
                    $company = $this->input->post('company');
                    $position = $this->input->post('position');
-                   $query = $this->db->get_where('user_job',array('job' => $position));
+                   $query = $this->db->get_where('user_position',array('position' => $position));
                    $data = array(
-                                  'city' => $city,
+                                  'province' => $province,
                                   'jobplace' => $company,
                                 );
                    if ($query->num_rows() === 0) 
                    {
                       $tmp = array(
-                                    'job' => $position
+                                    'position' => $position
                                   );
-                      if (!$this->db->insert('user_job',$tmp))
+                      if (!$this->db->insert('user_position',$tmp))
                          {
-                           $message['detail'] = "insert job fails";
+                           $message['detail'] = "insert position fails";
                            return FALSE;
                          }
                    }

@@ -13,12 +13,12 @@
 				     array(
 					        'field'=>'firstname',
 							'label'=>'firstname',
-							'rules'=>'required|alpha_numeric_chinese'
+							'rules'=>'required|alpha_numeric_chinese|max_length[8]'
 					      ),
 				     array( 
 				     	    'field'=>'lastname',
 				     	    'label'=>'lastname',
-				     	    'rules'=>'required|alpha_numeric_chinese'
+				     	    'rules'=>'required|alpha_numeric_chinese|max_length[8]'
 				     	  ),
 		              ),
         'secondsignup'=>array
@@ -33,12 +33,17 @@
                       	 	'label'=>'occupation',
                       	 	'rules'=>'required',
                       	 	),
+                      	 array(
+                      	 	'field'=>'bio',
+                      	 	'label'=>'bio',
+                      	 	'rules'=>'alpha_numeric_chinese|max_length[140]'
+                      	 	),
         	          ),
 		'thirdsignup_college'=>array
                       (
 					     array(
-					        'field'=>'city',
-							'label'=>'city',
+					        'field'=>'province',
+							'label'=>'province',
 							'rules'=>'required'
 					      ),
                          array(
@@ -60,8 +65,8 @@
 	    'thirdsignup_work' => array
 	                  (
 	                  	 array(
-	                  	 	 'field'=>'city',
-	                  	 	 'label'=>'city',
+	                  	 	 'field'=>'province',
+	                  	 	 'label'=>'province',
 	                  	 	 'rules'=>'required'
 	                  	 	),
 	                  	 array(
@@ -80,12 +85,12 @@
 					     array(
 					        'field'=>'OldPassword',
 							'label'=>'OldPassword',
-							'rules'=>'required|min_length[6]|max_length[12]'
+							'rules'=>'required|min_length[6]|max_length[16]'
 					       ),
                          array(
 					         'field'=>'NewPassword',
 							'label'=>'NewPassword',
-							'rules'=>'required|min_length[6]|max_length[12]'
+							'rules'=>'required|min_length[6]|max_length[16]'
 					        ),
                          array(
 					         'field'=>'Passconf',
@@ -103,9 +108,29 @@
 		          	array(
 		          		'field' => 'letter',
 		          		'label' => 'letter',
-		          		'rules' => 'required'
+		          		'rules' => 'required|max_length[400]'
 		          		),
-		          )			  						  
-					  
+		          ),
+		       'ask' => array
+		          (
+		          	array(
+		          		   'field' => 'title',
+		          		   'label' => 'title',
+		          		   'rules' => 'required|min_length[6]|max_length[40]'
+		          		 ), 
+		          	array(
+		          		   'field' => 'content',
+		          		   'label' => 'content',
+		          		   'rules' => 'max_length[400]'
+		          		 )
+		          ),
+		       'answer' => array
+		          (
+		            array(
+		            	   'field' => 'content',
+		            	   'label' => 'content',
+		            	   'rules' => 'required|min_length[6]|max_length[4000]'
+		            	 )
+		          )		  						    
                );			   
 ?>

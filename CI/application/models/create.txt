@@ -1,19 +1,20 @@
 create table answer_vote(
-  uid int not null,
+  uid int not null default 0,
   id int not null primary key auto_increment,
-  aid int not null,
-  vote int not null,
-  index(uid)
+  qid int not null default 0,
+  aid int not null default 0,
+  vote int not null default 0,
+  index(uid,aid,qid)
 ) default charset utf8;
 
-create table city(
+create table user_province(
   id int not null primary key auto_increment,
   city varchar(128) not null default "未填写"
 ) default charset utf8;
 
-create table user_school(
-  city varchar(128) not null default "未填写",
-  school varchar(128) not null default "未填写",
+create table user_college(
+  province varchar(128) not null default "未填写",
+  college varchar(128) not null default "未填写",
   id int not null primary key auto_increment,
   index(city)
 ) default charset utf8;
@@ -37,27 +38,28 @@ create table user_job(
 
 create table user_message(
   id int not null primary key auto_increment,
-  receiver varchar(128) not null,
-  sender varchar(128) not null,
-  message varchar(256) not null,
-  look int not null,
-  letter_id int not null,
-  date timestamp not null,
+  rece_id int not null default 0,
+  send_id int not null default 0,
+  letter varchar(256) not null,
+  look int not null default 0,
+  letter_id int not null default 0,
+  date timestamp not null default current_timestamp,
   foreign key(letter_id) references user_message_date(id) on delete cascade on update cascade,
-  index(receiver),
-  index(sender)
+  index(rece_id),
+  index(send_id)
 ) default charset utf8;
 
 create table q2a_answer(
   id int not null primary key auto_increment,
-  uid int not null,
-  qid int not null,
+  uid int not null default 0,
+  qid int not null default 0,
   content text not null,
-  email varchar(128) not null,
-  realname varchar(128) not null,
-  good int not null,
-  bad int not null,
-  date timestamp,
+  realname varchar(128) not null default "未填写",
+  good int not null not null default 0,
+  bad int not null default 0,
+  date timestamp default current_timestamp,
+  flushtime_of_answer_good timestamp default current_timestamp,
+  flushtime_of_myanswer_get_good default current_timestamp
   index(qid),
   index(uid),
   foreign key(qid) references q2a_question(id) on delete cascade on update cascade
@@ -65,15 +67,14 @@ create table q2a_answer(
 
  create table q2a_question(
    id int not null primary key auto_increment,
-   uid int not null,
-   email varchar(128) not null,
-   realname varchar(128) not null,
-   title varchar(128) not null,
-   content text not null,
-   view_num int not null,
-   likenum int not null,
-   answer_num int not null,
-   date timestamp not null,
+   uid int not null default 0,
+   realname varchar(128) not null default "未填写",
+   title varchar(128) not null default "未填写",
+   content text not null ,
+   view_num int not null default 0,
+   follow_num int not null default 0,
+   answer_num int not null default 0,
+   date timestamp not null default current_timestamp,
    index(uid)
   ) default charset utf8;
 
@@ -122,9 +123,11 @@ create table user_tag(
 
 create table user_question(
   id int not null primary key auto_increment,
-  uid int not null,
-  qid int not null,
-  index(uid)
+  uid int not null default 0,
+  qid int not null default 0,
+  date timestamp not null default current_timestamp,
+  flushtime_of_new_answer timestamp not null default current_timestamp,
+  index(uid,qid)
 ) default charset utf8;
 
 create table tag_question(
@@ -135,9 +138,9 @@ create table tag_question(
 
 create table user_message_date(
   id int not null primary key auto_increment,
-  uid_1 int not null,
-  uid_2 int not null,
-  date timestamp not null
+  uid_1 int not null default 0,
+  uid_2 int not null default 0,
+  date timestamp not null default current_timestamp
 ) default charset utf8;
 
 create table attention_new_answer(
@@ -148,3 +151,28 @@ create table attention_new_answer(
   index(uid),
   index(qid)
 ) default charset utf8;
+
+create table master_follower(
+  id int not null primary key auto_increment,
+  master int not null default 0,
+  follower int not null default 0,
+  active enum('Y','N') default 'Y',
+  date timestamp default current_timestamp
+) default charset utf8;
+
+create table tag_type(
+  id int not null primary key auto_increment,
+  tag varchar(128) not null default '未填写'
+)default charset utf8;
+
+create table user_tag(
+  id int not null primary key auto_increment,
+  uid int not null default 0,
+  tag varchar(128) not null default ""
+) default charset utf8;
+
+create table question_tag(
+  id int not null primary key auto_increment,
+  qid int not null default 0,
+  tag varchar(128) not null default ""
+)default charset utf8;

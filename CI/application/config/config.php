@@ -15,7 +15,7 @@
 |
 */
 //$config['base_url']	= '121.40.92.145/CI';
-$config['base_url']	= 'http://localhost/So-What/';
+$config['base_url']	= 'http://localhost/So-What/CI/';
 /*
 |--------------------------------------------------------------------------
 | Index File

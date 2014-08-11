@@ -52,6 +52,7 @@
         	else
         	{
                 $row[$key] = $this->input->post($key);
+                $message[$key] = $this->input->post($key);
         	}
         }
         // $message = $row;
@@ -75,7 +76,7 @@
          else
          {
             $data = array(
-                            'photo' => 1
+                            'photo_upload' => 'Y' 
                          );
             $this->db->where('uid',$uid);
             $this->db->update('user_profile',$data);
@@ -104,6 +105,14 @@
             $config['new_image'] = $data['file_path'].$uid."_small".$data['file_ext'];
             $config['width'] = 27;
             $config['height'] = 27;
+            // $message = $config;
+            // return TRUE;
+            $this->image_lib->initialize($config);
+            $this->image_lib->resize();
+
+            $config['new_image'] = $data['file_path'].$uid."_tiny".$data['file_ext'];
+            $config['width'] = 16;
+            $config['height'] = 16;
             $this->load->library('image_lib',$config);
             $this->image_lib->initialize($config);
             $this->image_lib->resize();
@@ -112,12 +121,9 @@
         // $message = $query->row_array();
         return TRUE;
      }
-    
-    
-     /*我的提问*/
-     function my_question(& $message,$limit = 10,$offset = 0)
+         /*我的提问*/
+     function my_question(& $message,$uid,$limit = 10,$offset = 0)
      {
-        $uid = $this->session->userdata('uid');
         $this->db->order_by('date','desc');
         $this->db->limit($limit,$offset);
         $query = $this->db->get_where('q2a_question',array('uid'=>$uid));
@@ -126,9 +132,8 @@
      }
      
      /*我的回答*/
-     function my_answer(& $message,$limit = 10,$offset = 0)
+     function my_answer(& $message,$uid,$limit = 10,$offset = 0)
      {
-        $uid = $this->session->userdata('uid');
         $this->db->order_by('date','desc');
         $this->db->where('uid',$uid);
         $this->db->limit($limit,$offset);
@@ -146,11 +151,30 @@
         }
         return TRUE;
      }
-    /*我关注的问题*/
 
-    function my_attention(& $message,$limit = 10,$offset = 0)
+     /*修改我的回答*/
+     function modify_my_answer(&$message)
+     {
+         if ($this->form_validation->run('answer'))
+         {
+            $message['detail'] = form_error('answer');
+            return FALSE;
+         }
+         else
+         {
+            $content = $this->input->post('content');
+            $data = array(
+                          'content' => $content
+                        );
+            $aid = $this->input->post('aid');
+            $this->db->where('aid',$aid);
+            $this->db->update('q2a_answer',$data);
+            return TRUE;
+         }
+     }
+    /*我关注的问题*/
+    function my_follow_question(& $message,$uid,$limit = 10,$offset = 0)
     {
-        $uid = $this->session->userdata('uid');
         $this->db->order_by('date','desc');
         $this->db->select('qid');
         $this->db->where('uid',$uid);
@@ -166,258 +190,54 @@
         return TRUE;
     }
 
-     function letter_send(& $message)
-     {
-         if ($this->form_validation->run('letter_send') === FALSE)
-         {
-             $message['detail'] = "some inputs are unavailable";
-             return FALSE;
-         }
-         else
-         {
-             $send_id = $this->session->userdata('uid');
-             $rece_id = $this->input->post('uid');
-             $letter = $this->input->post('letter');
-             
-             if ($send_id > $rece_id)
-             {
-                $tmp = $send_id;
-                $send_id = $rece_id;
-                $rece_id = $tmp;
-             }
-             $data = array(
-                             'uid_1' => $send_id,
-                             'uid_2' => $rece_id,
-                             'date' => date('Y-m-d H:i:s',time())
-                          );
-             
-             $query = $this->db->get_where('user_message_date',array('uid_1' => $send_id,'uid_2' => $rece_id));
-             if ($query->num_rows() > 0)
-             {
-                $this->db->where(array('uid_1' => $send_id,'uid_2' => $rece_id));
-                $this->db->update('user_message_date',$data);
-             }
-             else
-             {
-                if (!$this->db->insert('user_message_date',$data))
-                {
-                    $message['detail'] = "insert user_message_date fails";
-                    return FALSE;
-                }
-             }
-
-             $query = $this->db->get_where('user_message_date',array('uid_1' => $send_id,'uid_2' => $rece_id));
-             $row = $query->row_array();
-             $letter_id = $row['id'];
-             $send_id = $this->session->userdata('uid');
-             $rece_id = $this->input->post('uid');
-             $data = array(
-                            'letter_id' => $letter_id,
-                            'send_id' => $send_id,
-                            'rece_id' => $rece_id,
-                            'message' => $letter,
-                            'look' => 0,
-                            'date' => date('Y-m-d H:i:s',time())
-                          );
-             if (!$this->db->insert('user_message',$data))
-             {
-                $message['detail'] = "insert wrong";
-                return FALSE;
-             }
-             else
-             {
-                return TRUE;
-             }
-         }
-     }
-
-     function letter_notify(& $message)
-     {
+    function follow(&$message,$uid)
+    {
         $myuid = $this->session->userdata('uid');
-        $this->db->where('rece_id',$myuid);
-        $this->db->where('look','0');
-        $message['sum'] = $this->db->count_all_results('user_message');
-        return TRUE; 
-     }
-
-     function letter_friend(& $message)
-     {
-         $myuid = $this->session->userdata('uid');        
-         $this->db->where('uid_1',$myuid);
-         $this->db->or_where('uid_2',$myuid);
-         $this->db->order_by('date','desc');
-         $query = $this->db->get('user_message_date');
-         $message = $query->result_array();
-
-         foreach ($message as $key => $index)
-         {
-            if ($index['uid_1'] == $myuid) $index['uid'] = $index['uid_2'];
-            else $index['uid'] = $index['uid_1'];
-            $uid = $index['uid'];
-            $this->db->select('realname');
-            $query = $this->db->get_where('user_profile',array('id' => $uid));
-            $row = $query->row_array();
-            $index['realname'] = $row['realname'];
-            unset($index['uid_1']);
-            unset($index['uid_2']);
-            $index['location'] = $this->public_model->middle_photo_get($uid);
-            $where = "(rece_id ='$myuid' AND send_id = '$uid') OR (rece_id = '$uid' AND send_id = '$myuid')";
-            $this->db->where($where);
-            $this->db->from('user_message');
-            $index['msg_total'] = $this->db->count_all_results();
-            $this->db->where('rece_id',$myuid);
-            $this->db->where('send_id',$uid);
-            $this->db->where('look','0');
-            $this->db->from('user_message');
-            $index['msg_unread'] = $this->db->count_all_results();
-            $message[$key] = $index; 
-         } 
-         return TRUE;
-     }
-
-     function letter_talk(& $message,$uid)
-     {
-         $myuid = $this->session->userdata('uid');
-         // $where = "(sender = '$uidemail' AND receiver = '$myemail' ) OR (sender = '$myemail' AND receiver = '$uidemail')";
-         // $message['where'] = $where;
-         $where = "(rece_id ='$myuid' AND send_id = '$uid') OR (rece_id = '$uid' AND send_id = '$myuid')";
-         $this->db->where($where);
-         $this->db->order_by('date','desc');
-         $query = $this->db->get('user_message');
-         $result = $query -> result_array();
-         foreach ($result as $key => $value)
-         {
-            if ($value['rece_id'] == $myuid) 
+        $this->db->where('follower',$myuid);
+        $this->db->where('master',$uid);
+        $this->db->from('master_follower');
+        $sum = $this->db->count_all_results();
+        if ($sum == 0)
+        {
+            $data = array(
+                            'follower' => $myuid,
+                            'master' => $uid
+                         );
+            $this->db->insert('master_follower',$data);
+            $message['follow'] = 'Y';
+            return TRUE;
+        }
+        else
+        {
+            $this->db->where('follower',$myuid);
+            $this->db->where('master',$uid);
+            $this->db->where('active','Y');
+            $this->db->from('master_follower');
+            $sum = $this->db->count_all_results();
+            if ($sum == 0)
             {
-                $value['dir'] = TRUE;
+                $data = array(
+                           'active' => 'Y'
+                        );
+                $this->db->where('follower',$myuid);
+                $this->db->where('master',$uid);
+                $this->db->update('master_follower',$data);
+                $message['follow'] = 'Y';
+                return TRUE;
             }
             else
             {
-                $value['dir'] = FALSE;
+                $data = array(
+                           'active' => 'N'
+                        );
+                $this->db->where('follower',$myuid);
+                $this->db->where('master',$uid);
+                $this->db->update('master_follower',$data);
+                $message['follow'] = 'N';
+                return TRUE;   
             }
-            unset($value['rece_id']);
-            unset($value['send_id']);
-            $message[$key] = $value;
-         }
-         $this->db->where('rece_id',$myuid);
-         $this->db->where('send_id',$uid);
-         $data = array(
-                        'look' => '1'
-                      );
-         return $this->db->update('user_message',$data);
-     }
+        }
+    }
 
-     function letter_set_look(& $message)
-     {
-        $myuid = $this->session->userdata('uid');
-        $this->db->where('rece_id',$myuid);
-        $data = array(
-                        'look' => '1'
-                     );
-        if (!$this->db->update('user_message',$data))
-            {
-                $message['detail'] = "update fails";
-                return FALSE;
-            };
-        return TRUE;
-     }
-
-     function attention_new_answer(& $message,& $num_1 = 0)
-     {
-          $uid = $this->session->userdata('uid');
-    
-          $this->db->select('qid,flushtime_of_new_answer');
-          $this->db->where('uid',$uid);
-          $query = $this->db->get('user_question');
-          $result = $query->result_array();
-
-          foreach ($result as $key => $value)
-          {
-             $qid = $value['qid'];
-             $timepoint = $value['flushtime_of_new_answer'];
-             //$message['timepoint'] = $timepoint;
-             $this->db->select('uid');
-             $this->db->where('qid',$qid);
-             $this->db->where('date >=',$timepoint);
-             //$this->db->where('uid !=',$uid);
-             $this->db->order_by('date','desc');
-             $query = $this->db->get('q2a_answer');
-             if ($query->num_rows() > 0)
-             {
-                $num_1 += $query->num_rows();
-                $value= $query->result_array();
-                $value['qid'] = $qid;
-                unset($value['flushtime_of_new_answer']);
-                $message[$key] = $value;
-             }
-          }
-          return TRUE;
-     }
-
-     function answer_good(& $message, & $num_2 = 0)
-     {
-          $uid = $this->session->userdata('uid');
-          
-          $this->db->select('id,flushtime_of_answer_good');
-          $this->db->where('uid',$uid);
-          $query = $this->db->get('q2a_answer');
-          $result = $query->result_array();
-
-          foreach ($result as $key => $value)
-          {
-             $aid = $value['id'];
-             $timepoint = $value['flushtime_of_answer_good'];
-               
-             $this->db->select('uid');
-             $this->db->where('aid',$aid);
-             $this->db->where('vote','1');
-             $this->db->where('date >=',$timepoint);
-            // $this->db->where('uid !=',$uid);
-             $this->db->order_by('date','desc');
-             $query = $this->db->get('answer_vote');
-             if ($query->num_rows() > 0)
-              {  
-                 $num_2 += $query->num_rows();
-                 $this->db->select('qid');
-                 $this->db->where('id',$aid);
-                 $tmp = $this->db->get_where('q2a_answer');
-                 $row = $tmp->row_array();
-                 $message[$key] = $query->result_array();
-                 $message[$key]['qid'] = $row['qid'];
-              }
-              
-          }       
-          return TRUE;
-     }
-
-
-     function myquestion_new_answer(& $message, & $num_3 = 0)
-     {
-          $uid = $this->session->userdata('uid');
-          
-          $this->db->select('id,flushtime_of_myquestion_new_answer');
-          $this->db->where('uid',$uid);
-          $query = $this->db->get('q2a_question');
-          $result = $query->result_array();
-
-          foreach ($result as $key => $value)
-          {
-             $qid = $value['id'];
-             $timepoint = $value['flushtime_of_myquestion_new_answer'];
-             
-             $this->db->select('uid');
-             $this->db->where('date >=',$timepoint);
-             $this->db->where('qid',$qid);
-             $this->db->order_by('date','desc');
-             $query = $this->db->get_where('q2a_answer');
-             if ($query->num_rows() > 0)
-              {
-                 $num_3 += $query->num_rows();
-                 $message[$key] = $query->result_array();
-                 $message[$key]['qid'] = $qid;
-              }
-          }       
-          return TRUE;
-     }
 };
 ?>
